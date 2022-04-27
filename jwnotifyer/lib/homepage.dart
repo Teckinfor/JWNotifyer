@@ -23,12 +23,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   Map languageFields = {
-    "English": true,
-    "Français": false,
-    "Español": false,
-    "Chinese": false,
-    "Dutch": false,
-    "German": false
+    "English": {"isEnabled":false,"infoMessage":"Disabled"},
+    "Français": {"isEnabled":false,"infoMessage":"Disabled"},
+    "Español": {"isEnabled":false,"infoMessage":"Disabled"},
+    "Chinese": {"isEnabled":false,"infoMessage":"Disabled"},
+    "Dutch": {"isEnabled":false,"infoMessage":"Disabled"},
+    "German": {"isEnabled":false,"infoMessage":"Disabled"}
   };
 
   List<Container> listActiveLanguages({required Map languageFields}) {
@@ -62,14 +62,22 @@ class _HomePageState extends State<HomePage> {
                 ],
               ),
               Switch(
-                  value: languageFields[language],
+                  value: languageFields[language]['isEnabled'],
                   onChanged: (newValue) {
                     setState(() {
-                      languageFields[language] = newValue;
+                      languageFields[language]['isEnabled'] = newValue;
+                      languageFields[language]['infoMessage'] = (newValue) ? "Enabled" : "Disabled";
                     });
                   })
             ],
-          )
+          ),
+          
+              Container(
+                alignment: Alignment.centerRight,
+                child: Text(languageFields[language]["infoMessage"], textAlign: TextAlign.right,),
+              ),
+            
+          
         ]),
       ));
     }
@@ -117,26 +125,27 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         color: Colors.grey,
         child: Center(
-            child: Column(children: [
-          Container(
-            margin: const EdgeInsets.only(top: 100),
-            child: const Text(
-              "JW Notifyer",
-              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+          child: Column(children: [
+            Container(
+              margin: const EdgeInsets.only(top: 100),
+              child: const Text(
+                "JW Notifyer",
+                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
+              ),
             ),
-          ),
-          Container(
-              height: MediaQuery.of(context).size.height - 250,
-              margin: const EdgeInsets.only(
-                  left: 100, right: 100, top: 50, bottom: 50),
-              decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 177, 176, 176),
-                  borderRadius: const BorderRadius.all(Radius.circular(25)),
-                  border: Border.all(color: Colors.black)),
-              child: SingleChildScrollView(
-                child: Column(
-                    children:
-                        listActiveLanguages(languageFields: languageFields)),
+            const Text("Manage JW.ORG notifications by language"),
+            Container(
+                height: MediaQuery.of(context).size.height - 250,
+                margin: const EdgeInsets.only(
+                    left: 75, right: 75, top: 30, bottom: 50),
+                decoration: BoxDecoration(
+                    color: const Color.fromARGB(255, 177, 176, 176),
+                    borderRadius: const BorderRadius.all(Radius.circular(25)),
+                    border: Border.all(color: Colors.black)),
+                child: SingleChildScrollView(
+                  child: Column(
+                      children:
+                          listActiveLanguages(languageFields: languageFields)),
               ))
         ])),
       ),
