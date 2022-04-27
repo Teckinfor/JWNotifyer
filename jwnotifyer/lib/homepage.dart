@@ -228,9 +228,34 @@ class _HomePageState extends State<HomePage> {
     return tempList;
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      floatingActionButton: FloatingActionButton(
+            child: const Icon(Icons.settings),
+            backgroundColor: Colors.blueGrey ,
+            onPressed: (){
+          }),
       body: Container(
         color: Colors.grey,
         child: Center(
