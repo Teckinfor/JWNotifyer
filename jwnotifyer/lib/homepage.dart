@@ -1,4 +1,5 @@
-import 'dart:html';
+import 'dart:collection';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -23,15 +24,59 @@ class _HomePageState extends State<HomePage> {
   }
 
   Map languageFields = {
-    "English": {"isEnabled":false,"infoMessage":"Disabled"},
-    "Français": {"isEnabled":false,"infoMessage":"Disabled"},
-    "Español": {"isEnabled":false,"infoMessage":"Disabled"},
-    "Chinese": {"isEnabled":false,"infoMessage":"Disabled"},
-    "Dutch": {"isEnabled":false,"infoMessage":"Disabled"},
-    "German": {"isEnabled":false,"infoMessage":"Disabled"}
+    "English": {"isEnabled": false, "infoMessage": "Disabled"},
   };
 
-  List<Container> listActiveLanguages({required Map languageFields}) {
+  Map supportedLanguages = {
+    'English': false,
+    'Français': true,
+    'Español': true,
+    'Dutch': true,
+    'German': true,
+    'Italiano': true
+  };
+
+  List<Container> allLanguageList(
+      {required Map supportedLanguages, required Map languageFields}) {
+    List<Container> tempList = [];
+    SplayTreeMap<String, bool> st = SplayTreeMap<String, bool>();
+    supportedLanguages.forEach((key, value) {
+      st[key] = value;
+    });
+    for (String language in st.keys) {
+      if (supportedLanguages[language]) {
+        tempList.add(Container(
+            height: 50,
+            child: Column(
+              children: [
+                Divider(),
+                Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(language),
+                      ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            languageFields[language] = {
+                              "isEnabled": false,
+                              "infoMessage": "Disabled"
+                            };
+                            supportedLanguages[language] =
+                                supportedLanguages[language] ? false : true;
+                          });
+                        },
+                        child: const Icon(Icons.add),
+                      )
+                    ]),
+              ],
+            )));
+      }
+    }
+    return tempList;
+  }
+
+  List<Container> listActiveLanguages(
+      {required Map languageFields, required Map supportedLanguages}) {
     List<Container> tempList = [];
     for (String language in languageFields.keys) {
       tempList.add(Container(
@@ -48,6 +93,8 @@ class _HomePageState extends State<HomePage> {
                       onPressed: () {
                         setState(() {
                           languageFields.remove(language);
+                          supportedLanguages[language] =
+                              supportedLanguages[language] ? false : true;
                         });
                       },
                       icon: const Icon(
@@ -65,19 +112,25 @@ class _HomePageState extends State<HomePage> {
                   value: languageFields[language]['isEnabled'],
                   onChanged: (newValue) {
                     setState(() {
+                      //////////////////////////////////////////////////////////////// DEBUG FUNCTION
+                      final List<Locale> locales =
+                          WidgetsBinding.instance!.window.locales;
+                      print(locales);
+                      //////////////////////////////////////////////////////////////// DEBUG FUNCTION
                       languageFields[language]['isEnabled'] = newValue;
-                      languageFields[language]['infoMessage'] = (newValue) ? "Enabled" : "Disabled";
+                      languageFields[language]['infoMessage'] =
+                          (newValue) ? "Enabled" : "Disabled";
                     });
                   })
             ],
           ),
-          
-              Container(
-                alignment: Alignment.centerRight,
-                child: Text(languageFields[language]["infoMessage"], textAlign: TextAlign.right,),
-              ),
-            
-          
+          Container(
+            alignment: Alignment.centerRight,
+            child: Text(
+              languageFields[language]["infoMessage"],
+              textAlign: TextAlign.right,
+            ),
+          ),
         ]),
       ));
     }
@@ -86,7 +139,18 @@ class _HomePageState extends State<HomePage> {
         height: 100,
         child: TextButton(
           onPressed: () {
-            setState(() {});
+            showDialog(
+                context: context,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                      title: const Text("Languages"),
+                      content: SingleChildScrollView(
+                          child : Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: allLanguageList(
+                              supportedLanguages: supportedLanguages,
+                              languageFields: languageFields))));
+                });
           },
           style: ButtonStyle(
               foregroundColor: MaterialStateProperty.all(Colors.blueGrey),
@@ -125,28 +189,29 @@ class _HomePageState extends State<HomePage> {
       body: Container(
         color: Colors.grey,
         child: Center(
-          child: Column(children: [
-            Container(
-              margin: const EdgeInsets.only(top: 100),
-              child: const Text(
-                "JW Notifyer",
-                style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
-              ),
+            child: Column(children: [
+          Container(
+            margin: const EdgeInsets.only(top: 100),
+            child: const Text(
+              "JW Notifyer",
+              style: TextStyle(fontSize: 35, fontWeight: FontWeight.bold),
             ),
-            const Text("Manage JW.ORG notifications by language"),
-            Container(
-                height: MediaQuery.of(context).size.height - 250,
-                margin: const EdgeInsets.only(
-                    left: 75, right: 75, top: 30, bottom: 50),
-                decoration: BoxDecoration(
-                    color: const Color.fromARGB(255, 177, 176, 176),
-                    borderRadius: const BorderRadius.all(Radius.circular(25)),
-                    border: Border.all(color: Colors.black)),
-                child: SingleChildScrollView(
-                  child: Column(
-                      children:
-                          listActiveLanguages(languageFields: languageFields)),
-              ))
+          ),
+          const Text("Manage JW.ORG notifications by language"),
+          Container(
+              height: MediaQuery.of(context).size.height - 250,
+              margin: const EdgeInsets.only(
+                  left: 75, right: 75, top: 30, bottom: 50),
+              decoration: BoxDecoration(
+                  color: const Color.fromARGB(255, 177, 176, 176),
+                  borderRadius: const BorderRadius.all(Radius.circular(25)),
+                  border: Border.all(color: Colors.black)),
+              child: SingleChildScrollView(
+                child: Column(
+                    children: listActiveLanguages(
+                        languageFields: languageFields,
+                        supportedLanguages: supportedLanguages)),
+              )),
         ])),
       ),
     );
