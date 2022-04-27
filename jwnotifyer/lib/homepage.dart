@@ -1,5 +1,5 @@
 import 'dart:collection';
-
+import 'settings.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -255,6 +255,10 @@ class _HomePageState extends State<HomePage> {
             child: const Icon(Icons.settings),
             backgroundColor: Colors.blueGrey ,
             onPressed: (){
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const settings()),
+              );
           }),
       body: Container(
         color: Colors.grey,
