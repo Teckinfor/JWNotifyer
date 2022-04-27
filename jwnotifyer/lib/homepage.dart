@@ -21,7 +21,11 @@ class _HomePageState extends State<HomePage> {
   }
 
   Map languageFields = {
-    "English": {"isEnabled": false, "infoMessage": "Disabled"},
+    "English": {
+      "isEnabled": true,
+      "infoMessage": "Disabled",
+      "lastNotif": DateTime.now()
+    },
   };
 
   Map supportedLanguages = {
@@ -32,6 +36,47 @@ class _HomePageState extends State<HomePage> {
     'German': true,
     'Italiano': true
   };
+
+  Container lastNotificationInformation(
+      {required String language, required Map languageFields}) {
+    String text = "";
+    if (languageFields[language]["lastNotif"] != null) {
+      num second = ((DateTime.now().millisecondsSinceEpoch / 1000).round() -
+          (languageFields[language]["lastNotif"].millisecondsSinceEpoch / 1000)
+              .round()) as int;
+      if (second > 31536000) {
+        int years = (second / 31536000).round();
+        text = (years == 1) ? "$years year ago" : "$years years ago";
+      } else if (second > 86400) {
+        int days = (second / 86400).round();
+        text = (days == 1) ? "$days day ago" : "$days days ago";
+      } else if (second > 3600) {
+        int hours = (second / 3600).round();
+        text = (hours == 1) ? "$hours hour ago" : "$hours hours ago";
+      } else if (second > 60) {
+        int minutes = (second / 60).round();
+        text = (minutes == 1) ? "$minutes minute ago" : "$minutes minutes ago";
+      } else {
+        text = (second == 1) ? "$second second ago" : "$second seconds ago";
+      }
+
+      return Container(
+        alignment: Alignment.bottomLeft,
+        child: Row(children: [
+          const Text(
+            "Last notification: ",
+            style: const TextStyle(fontSize: 10),
+          ),
+          Text(
+            text,
+            style: const TextStyle(fontSize: 10),
+          )
+        ]),
+      );
+    }
+
+    return Container();
+  }
 
   List<Container> allLanguageList(
       {required Map supportedLanguages, required Map languageFields}) {
@@ -56,7 +101,8 @@ class _HomePageState extends State<HomePage> {
                           setState(() {
                             languageFields[language] = {
                               "isEnabled": false,
-                              "infoMessage": "Disabled"
+                              "infoMessage": "Disabled",
+                              "lastNotif": null
                             };
                             supportedLanguages[language] =
                                 supportedLanguages[language] ? false : true;
@@ -128,6 +174,8 @@ class _HomePageState extends State<HomePage> {
               textAlign: TextAlign.right,
             ),
           ),
+          lastNotificationInformation(
+              language: language, languageFields: languageFields)
         ]),
       ));
     }
