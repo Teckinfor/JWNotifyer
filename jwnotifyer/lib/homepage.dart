@@ -132,8 +132,7 @@ class _HomePageState extends State<HomePage> {
               decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 177, 176, 176),
                   borderRadius: const BorderRadius.all(Radius.circular(25)),
-                  border: Border.all(color: Colors.black)
-                  ),
+                  border: Border.all(color: Colors.black)),
               child: SingleChildScrollView(
                 child: Column(
                     children:
