@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:math';
 
 import 'package:flutter/material.dart';
 
@@ -13,13 +12,11 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -49,7 +46,7 @@ class _HomePageState extends State<HomePage> {
             height: 50,
             child: Column(
               children: [
-                Divider(),
+                const Divider(),
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -145,11 +142,11 @@ class _HomePageState extends State<HomePage> {
                   return AlertDialog(
                       title: const Text("Languages"),
                       content: SingleChildScrollView(
-                          child : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: allLanguageList(
-                              supportedLanguages: supportedLanguages,
-                              languageFields: languageFields))));
+                          child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: allLanguageList(
+                                  supportedLanguages: supportedLanguages,
+                                  languageFields: languageFields))));
                 });
           },
           style: ButtonStyle(
