@@ -36,7 +36,10 @@ class _HomePageState extends State<HomePage> {
     'Italiano': true
   };
 
+  // Set a timer
   Timer? timer;
+
+  // Set "Normal" as default value of interval
   String intervalValue = "Normal";
 
 

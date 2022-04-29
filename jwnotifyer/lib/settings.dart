@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'copyright_informations.dart';
 
 class Settings extends StatefulWidget {
   final String intervalUsed;
@@ -12,12 +13,6 @@ class Settings extends StatefulWidget {
 class _SettingsState extends State<Settings> {
   String intervalUsed;
   _SettingsState({required this.intervalUsed}) : super();
-
-
-
-
-
-
 
   ///////////////////////
   ////// INSTANCES //////
@@ -48,71 +43,76 @@ class _SettingsState extends State<Settings> {
     return checkInterval;
   }
 
-
-
   ////////////////////////////
   ////// BUILD FUNCTION //////
   ////////////////////////////
 
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        floatingActionButton: FloatingActionButton.extended(
-          onPressed: () { // Button to homepage
-            Navigator.pop(context, intervalUsed);
-          },
-          backgroundColor: Colors.blueGrey,
-          icon: const Icon(Icons.save),
-          label: const Text("SAVE"),
+      body: Container(
+        color: Colors.grey,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            Container(
+                margin: const EdgeInsets.only(top: 130, bottom: 40),
+                child: const Text(
+                  "Settings",
+                  style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.black),
+                )),
+            Container(
+              margin: const EdgeInsets.only(left: 20, right: 20),
+              child: Column(children: [
+                Row(
+                  children: const [
+                    Text("Check interval"),
+                  ],
+                ),
+                Row(
+                  children: const [
+                    Text(
+                      "The more regular the checks, the more the battery can be consumed",
+                      style: TextStyle(fontSize: 10),
+                    )
+                  ],
+                ),
+                Row(
+                  children: [
+                    DropdownButton(
+                        items: checkInterval,
+                        value: intervalUsed,
+                        onChanged: (String? newValue) {
+                          setState(() {
+                            intervalUsed = newValue!;
+                          });
+                        })
+                  ],
+                ),
+              ]),
+            ),
+            Align(
+                alignment: Alignment.bottomRight,
+                child: Container(
+                  margin: const EdgeInsets.only(right: 10),
+                  child: FloatingActionButton.extended(
+                    onPressed: () {
+                      // Button to homepage
+                      Navigator.pop(context, intervalUsed);
+                    },
+                    backgroundColor: Colors.blueGrey,
+                    icon: const Icon(Icons.save),
+                    label: const Text("SAVE"),
+                  ),
+                ))
+          ],
         ),
-        body: Container(
-            color: Colors.grey,
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            child: Column(
-              children: [
-                Container(
-                    margin: const EdgeInsets.only(top: 130, bottom: 40),
-                    child: const Text(
-                      "Settings",
-                      style: TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.w700,
-                          color: Colors.black),
-                    )),
-                Container(
-                  margin: const EdgeInsets.only(left: 20, right: 20),
-                  child: Column(children: [
-                    Row(
-                      children: const [
-                        Text("Check interval"),
-                      ],
-                    ),
-                    Row(
-                      children: const [
-                        Text(
-                          "The more regular the checks, the more the battery can be consumed",
-                          style: TextStyle(fontSize: 10),
-                        )
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        DropdownButton(
-                            items: checkInterval,
-                            value: intervalUsed,
-                            onChanged: (String? newValue) {
-                              setState(() {
-                                intervalUsed = newValue!;
-                              });
-                            })
-                      ],
-                    ),
-                  ]),
-                )
-              ],
-            )));
+      ),
+      bottomSheet: const CopyrightInformations(),
+    );
   }
 }
