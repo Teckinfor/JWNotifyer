@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:collection';
 import 'settings.dart';
 import 'package:flutter/material.dart';
@@ -9,22 +10,45 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+Timer? timer;
+String intervalValue = "Normal";
+
 class _HomePageState extends State<HomePage> {
   @override
   void initState() {
+
     super.initState();
-  }
+
+      int interval = 3600;
+      switch (intervalValue) {
+        case "Slow":{
+          interval = 21600;
+          break;
+        }
+        case "Fast":{
+          interval = 1800;
+          break;
+        }
+        default:
+          interval = 3600;
+          break;
+      }
+
+      timer = Timer.periodic(Duration(seconds: interval), (Timer t) => checkContentEachLanguage(languageFields: languageFields));
+      
+    }
 
   @override
   void dispose() {
+    timer?.cancel();
     super.dispose();
   }
 
   Map languageFields = {
     "English": {
       "isEnabled": true,
-      "infoMessage": "Disabled",
-      "lastNotif": DateTime.now()
+      "infoMessage": "Enabled",
+      "lastNotif": null
     },
   };
 
@@ -36,6 +60,15 @@ class _HomePageState extends State<HomePage> {
     'German': true,
     'Italiano': true
   };
+
+  void checkContentEachLanguage({required Map languageFields}){
+    for (String language in languageFields.keys){
+      if (languageFields[language]["isEnabled"]){
+        print("CURRENTLY CHECKING FOR $language each $intervalValue interval");
+        languageFields[language]["lastNotif"] = DateTime.now();
+      }
+    }
+  }
 
   Container lastNotificationInformation(
       {required String language, required Map languageFields}) {
@@ -65,7 +98,7 @@ class _HomePageState extends State<HomePage> {
         child: Row(children: [
           const Text(
             "Last notification: ",
-            style: const TextStyle(fontSize: 10),
+            style: TextStyle(fontSize: 10),
           ),
           Text(
             text,
@@ -156,9 +189,9 @@ class _HomePageState extends State<HomePage> {
                   onChanged: (newValue) {
                     setState(() {
                       //////////////////////////////////////////////////////////////// DEBUG FUNCTION
-                      final List<Locale> locales =
-                          WidgetsBinding.instance!.window.locales;
-                      print(locales);
+                      //final List<Locale> locales =
+                      //    WidgetsBinding.instance!.window.locales;
+                      //print(locales);
                       //////////////////////////////////////////////////////////////// DEBUG FUNCTION
                       languageFields[language]['isEnabled'] = newValue;
                       languageFields[language]['infoMessage'] =
@@ -254,10 +287,10 @@ class _HomePageState extends State<HomePage> {
       floatingActionButton: FloatingActionButton(
             child: const Icon(Icons.settings),
             backgroundColor: Colors.blueGrey ,
-            onPressed: (){
-              Navigator.push(
+            onPressed: () async {
+              intervalValue = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => const settings()),
+                MaterialPageRoute(builder: (context) => settings(intervalUsed: intervalValue)),
               );
           }),
       body: Container(
