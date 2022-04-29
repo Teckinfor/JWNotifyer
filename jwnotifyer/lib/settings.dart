@@ -1,17 +1,29 @@
 import 'package:flutter/material.dart';
 
-class settings extends StatefulWidget {
-  String intervalUsed;
-  settings({Key? key, required this.intervalUsed}) : super(key: key);
+class Settings extends StatefulWidget {
+  final String intervalUsed;
+  const Settings({Key? key, required this.intervalUsed}) : super(key: key);
 
   @override
-  State<settings> createState() => _settingsState(intervalUsed: intervalUsed);
+  // ignore: no_logic_in_create_state
+  State<Settings> createState() => _SettingsState(intervalUsed: intervalUsed);
 }
 
-class _settingsState extends State<settings> {
+class _SettingsState extends State<Settings> {
   String intervalUsed;
-  _settingsState({required this.intervalUsed}) : super();
+  _SettingsState({required this.intervalUsed}) : super();
 
+
+
+
+
+
+
+  ///////////////////////
+  ////// INSTANCES //////
+  ///////////////////////
+
+  //Drop down menu
   List<DropdownMenuItem<String>> get checkInterval {
     List<DropdownMenuItem<String>> checkInterval = [
       const DropdownMenuItem(
@@ -36,11 +48,19 @@ class _settingsState extends State<settings> {
     return checkInterval;
   }
 
+
+
+  ////////////////////////////
+  ////// BUILD FUNCTION //////
+  ////////////////////////////
+
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         floatingActionButton: FloatingActionButton.extended(
-          onPressed: () {
+          onPressed: () { // Button to homepage
             Navigator.pop(context, intervalUsed);
           },
           backgroundColor: Colors.blueGrey,

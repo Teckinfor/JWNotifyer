@@ -10,40 +10,14 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-Timer? timer;
-String intervalValue = "Normal";
-
 class _HomePageState extends State<HomePage> {
-  @override
-  void initState() {
 
-    super.initState();
 
-      int interval = 3600;
-      switch (intervalValue) {
-        case "Slow":{
-          interval = 21600;
-          break;
-        }
-        case "Fast":{
-          interval = 1800;
-          break;
-        }
-        default:
-          interval = 3600;
-          break;
-      }
-
-      timer = Timer.periodic(Duration(seconds: interval), (Timer t) => checkContentEachLanguage(languageFields: languageFields));
-      
-    }
-
-  @override
-  void dispose() {
-    timer?.cancel();
-    super.dispose();
-  }
-
+  ///////////////////////
+  ////// INSTANCES //////
+  ///////////////////////
+  
+  // Languages added to the HomePage
   Map languageFields = {
     "English": {
       "isEnabled": true,
@@ -52,6 +26,7 @@ class _HomePageState extends State<HomePage> {
     },
   };
 
+  // All languages (true : not added to the HomePage)
   Map supportedLanguages = {
     'English': false,
     'Français': true,
@@ -61,6 +36,74 @@ class _HomePageState extends State<HomePage> {
     'Italiano': true
   };
 
+  Timer? timer;
+  String intervalValue = "Normal";
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  /////////////////////////////
+  ////// State functions //////
+  /////////////////////////////
+
+  @override
+  void initState() {
+
+    super.initState();
+
+      int interval = 3600;
+      switch (intervalValue) {
+        case "Slow":{
+          interval = 21600; // 6 hours
+          break;
+        }
+        case "Fast":{
+          interval = 1800; // 30 minutes
+          break;
+        }
+        default:
+          interval = 3600; // 1 hour 
+          break;
+      }
+
+      // Auto check (must be modified)
+      timer = Timer.periodic(Duration(seconds: 3), (Timer t) => checkContentEachLanguage(languageFields: languageFields));
+      
+    }
+
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ///////////////////////
+  ////// FUNCTIONS //////
+  ///////////////////////
+
+  // Fetching informations on JW.ORG
   void checkContentEachLanguage({required Map languageFields}){
     for (String language in languageFields.keys){
       if (languageFields[language]["isEnabled"]){
@@ -70,6 +113,7 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  // Display the time since the last received notification
   Container lastNotificationInformation(
       {required String language, required Map languageFields}) {
     String text = "";
@@ -94,6 +138,7 @@ class _HomePageState extends State<HomePage> {
       }
 
       return Container(
+        margin: const EdgeInsets.only(left: 15),
         alignment: Alignment.bottomLeft,
         child: Row(children: [
           const Text(
@@ -111,6 +156,7 @@ class _HomePageState extends State<HomePage> {
     return Container();
   }
 
+  // Display all languages available in "Add language" option
   List<Container> allLanguageList(
       {required Map supportedLanguages, required Map languageFields}) {
     List<Container> tempList = [];
@@ -151,13 +197,14 @@ class _HomePageState extends State<HomePage> {
     return tempList;
   }
 
+  // Display all languages added to the HomePage
   List<Container> listActiveLanguages(
       {required Map languageFields, required Map supportedLanguages}) {
     List<Container> tempList = [];
     for (String language in languageFields.keys) {
       tempList.add(Container(
         margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-        height: 100,
+        height: 87,
         child: Column(children: [
           const Divider(),
           Row(
@@ -175,7 +222,7 @@ class _HomePageState extends State<HomePage> {
                       },
                       icon: const Icon(
                         Icons.close,
-                        color: Colors.red,
+                        color: Colors.blueGrey,
                       )),
                   Text(
                     language,
@@ -189,6 +236,7 @@ class _HomePageState extends State<HomePage> {
                   onChanged: (newValue) {
                     setState(() {
                       //////////////////////////////////////////////////////////////// DEBUG FUNCTION
+                      //////////////////////////////////////////////////////////////// Used to detect the device language for a future feature
                       //final List<Locale> locales =
                       //    WidgetsBinding.instance!.window.locales;
                       //print(locales);
@@ -277,9 +325,9 @@ class _HomePageState extends State<HomePage> {
 
 
 
-
-
-
+  ////////////////////////////
+  ////// BUILD FONCTION //////
+  ////////////////////////////
 
   @override
   Widget build(BuildContext context) {
@@ -290,7 +338,7 @@ class _HomePageState extends State<HomePage> {
             onPressed: () async {
               intervalValue = await Navigator.push(
                 context,
-                MaterialPageRoute(builder: (context) => settings(intervalUsed: intervalValue)),
+                MaterialPageRoute(builder: (context) => Settings(intervalUsed: intervalValue)),
               );
           }),
       body: Container(

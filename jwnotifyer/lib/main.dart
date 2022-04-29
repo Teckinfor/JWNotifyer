@@ -12,12 +12,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title:'JWNotifyer',
-      home: HomePage(),
+      title: 'JWNotifyer',
+      home: const HomePage(),
       theme: ThemeData(
         fontFamily: 'Oxygen',
         primaryColor: Colors.deepPurple,
-        ),
+      ),
     );
   }
 }
