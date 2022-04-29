@@ -11,19 +11,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
-
   ///////////////////////
   ////// INSTANCES //////
   ///////////////////////
-  
+
   // Languages added to the HomePage
   Map languageFields = {
-    "English": {
-      "isEnabled": true,
-      "infoMessage": "Enabled",
-      "lastNotif": null
-    },
+    "English": {"isEnabled": true, "infoMessage": "Enabled", "lastNotif": null},
   };
 
   // All languages (true : not added to the HomePage)
@@ -42,47 +36,35 @@ class _HomePageState extends State<HomePage> {
   // Set "Normal" as default value of interval
   String intervalValue = "Normal";
 
-
-
-
-
-
-
-
-
-
-
-
-
-
   /////////////////////////////
   ////// State functions //////
   /////////////////////////////
 
   @override
   void initState() {
-
     super.initState();
 
-      int interval = 3600;
-      switch (intervalValue) {
-        case "Slow":{
+    int interval = 3600;
+    switch (intervalValue) {
+      case "Slow":
+        {
           interval = 21600; // 6 hours
           break;
         }
-        case "Fast":{
+      case "Fast":
+        {
           interval = 1800; // 30 minutes
           break;
         }
-        default:
-          interval = 3600; // 1 hour 
-          break;
-      }
-
-      // Auto check (must be modified)
-      timer = Timer.periodic(Duration(seconds: 3), (Timer t) => checkContentEachLanguage(languageFields: languageFields));
-      
+      default:
+        interval = 3600; // 1 hour
+        break;
     }
+
+    // Auto check (must be modified)
+    timer = Timer.periodic(Duration(seconds: 3),
+        (Timer t) => checkContentEachLanguage(languageFields: languageFields));
+  }
 
   @override
   void dispose() {
@@ -90,26 +72,14 @@ class _HomePageState extends State<HomePage> {
     super.dispose();
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
   ///////////////////////
   ////// FUNCTIONS //////
   ///////////////////////
 
   // Fetching informations on JW.ORG
-  void checkContentEachLanguage({required Map languageFields}){
-    for (String language in languageFields.keys){
-      if (languageFields[language]["isEnabled"]){
+  void checkContentEachLanguage({required Map languageFields}) {
+    for (String language in languageFields.keys) {
+      if (languageFields[language]["isEnabled"]) {
         print("CURRENTLY CHECKING FOR $language each $intervalValue interval");
         languageFields[language]["lastNotif"] = DateTime.now();
       }
@@ -312,22 +282,6 @@ class _HomePageState extends State<HomePage> {
     return tempList;
   }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   ////////////////////////////
   ////// BUILD FONCTION //////
   ////////////////////////////
@@ -335,14 +289,16 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-            child: const Icon(Icons.settings),
-            backgroundColor: Colors.blueGrey ,
-            onPressed: () async {
-              intervalValue = await Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => Settings(intervalUsed: intervalValue)),
-              );
+      floatingActionButton: FloatingActionButton.extended(
+          icon: const Icon(Icons.settings),
+          label: const Text("Settings"),
+          backgroundColor: Colors.blueGrey,
+          onPressed: () async {
+            intervalValue = await Navigator.push(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => Settings(intervalUsed: intervalValue)),
+            );
           }),
       body: Container(
         color: Colors.grey,
