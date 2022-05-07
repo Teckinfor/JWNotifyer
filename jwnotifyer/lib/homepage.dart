@@ -140,7 +140,7 @@ class _HomePageState extends State<HomePage> {
     for (String language in st.keys) {
       if (supportedLanguages[language]) {
         tempList.add(Container(
-            height: 50,
+            height: 65,
             child: Column(
               children: [
                 const Divider(),
@@ -177,7 +177,7 @@ class _HomePageState extends State<HomePage> {
     for (String language in languageFields.keys) {
       tempList.add(Container(
         margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
-        height: 87,
+        height: 95,
         child: Column(children: [
           const Divider(),
           Row(
@@ -222,6 +222,7 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
           Container(
+            //margin: EdgeInsets.only(bottom: 10),
             alignment: Alignment.centerRight,
             child: Text(
               languageFields[language]["infoMessage"],
@@ -315,7 +316,7 @@ class _HomePageState extends State<HomePage> {
           Container(
               height: MediaQuery.of(context).size.height - 250,
               margin: const EdgeInsets.only(
-                  left: 75, right: 75, top: 30, bottom: 50),
+                  left: 25, right: 25, top: 30, bottom: 50),
               decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 177, 176, 176),
                   borderRadius: const BorderRadius.all(Radius.circular(25)),

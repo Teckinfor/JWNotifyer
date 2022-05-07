@@ -9,11 +9,11 @@ class CopyrightInformations extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         width: MediaQuery.of(context).size.width,
-        height: 100,
+        //height: 150,
         color: Colors.grey,
         child: Container(
             margin: const EdgeInsetsDirectional.only(
-                start: 10, top: 10, bottom: 10),
+                start: 10, top: 10, bottom: 15),
             width: MediaQuery.of(context).size.width - 150,
             child: RichText(
                 text: TextSpan(
