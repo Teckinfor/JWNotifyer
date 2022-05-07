@@ -1,33 +1,34 @@
-class Fetcher {
+import './store_data.dart';
 
+class Fetcher {
   String _initial = "NN";
 
   // Continue listing
-  final Map<String,String> _link = {
-    "Français":"FR",
-    "Español":"ES",
-    "English":"EN",
-    "Italiano":"IT",
-    "Nederlands":"ND"
+  final Map<String, String> _link = {
+    "Français": "FR",
+    "Español": "ES",
+    "English": "EN",
+    "Italiano": "IT",
+    "Nederlands": "ND"
   };
 
-  set setInitial(String newInitial){
+  set setInitial(String newInitial) {
     _initial = newInitial;
   }
 
-  Fetcher({required String language}){
+  Fetcher({required String language}) {
     _initial = _link[language] ?? "NN";
     (language == "None") ? getLinks() : fetchElements();
   }
 
   Fetcher.getLinks() : this(language: "None");
 
-  Map<String,String> getLinks(){
+  Map<String, String> getLinks() {
     return _link;
   }
 
-  DateTime? fetchElements(){
-    Map newContent = getNewElement() ?? {"status":"ERROR"};
+  DateTime? fetchElements() {
+    Map newContent = getNewElement() ?? {"status": "ERROR"};
     return (thereIsNewContent(newContent) ? makeNotification() : null);
   }
 
@@ -63,16 +64,15 @@ class Fetcher {
 
   */
 
-
-  Map? getNewElement(){
-    if(_initial != "NN"){  
+  Map? getNewElement() {
+    if (_initial != "NN") {
       Map test = {};
       return test;
     }
     return null;
   }
 
-  bool thereIsNewContent(newContent){
+  bool thereIsNewContent(newContent) {
     // Check si la langue était déjà dans le fichier et si pas il enregistre le nouveau contenu
     // Check que le status soit OK
     // Regarde si le dernier élément de newContent est déjà dans le fichier sauvegardé et etc
@@ -80,7 +80,7 @@ class Fetcher {
     return true;
   }
 
-  DateTime makeNotification(){
+  DateTime makeNotification() {
     // Make notif + retour d'un DateTime.now()
     return DateTime.now();
   }
