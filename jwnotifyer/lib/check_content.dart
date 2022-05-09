@@ -16,15 +16,17 @@ class Fetcher {
     _initial = newInitial;
   }
 
-  Fetcher({required String language}) {
+  Fetcher({String language = "None"}){
     _initial = _link[language] ?? "NN";
-    (language == "None") ? getLinks() : fetchElements();
+    (language == "None") ? "" : fetchElements();
   }
 
-  Fetcher.getLinks() : this(language: "None");
-
-  Map<String, String> getLinks() {
-    return _link;
+  Map<String, bool> getLinks() {
+    Map<String, bool> supportedLanguages = {};
+    _link.forEach((key, value) { 
+      supportedLanguages[key] = true;
+    });
+    return supportedLanguages;
   }
 
   DateTime? fetchElements() {

@@ -1,5 +1,8 @@
+// ignore_for_file: sized_box_for_whitespace
+
 import 'dart:async';
 import 'dart:collection';
+import 'package:jwnotifyer/check_content.dart';
 import 'settings.dart';
 import 'package:flutter/material.dart';
 
@@ -16,19 +19,10 @@ class _HomePageState extends State<HomePage> {
   ///////////////////////
 
   // Languages added to the HomePage
-  Map languageFields = {
-    "English": {"isEnabled": true, "infoMessage": "Enabled", "lastNotif": null},
-  };
+  Map languageFields = {};
 
   // All languages (true : not added to the HomePage)
-  Map supportedLanguages = {
-    'English': false,
-    'Français': true,
-    'Español': true,
-    'Dutch': true,
-    'German': true,
-    'Italiano': true
-  };
+  Map supportedLanguages = Fetcher().getLinks();
 
   // Set a timer
   Timer? timer;
@@ -62,7 +56,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     // Auto check (must be modified)
-    timer = Timer.periodic(Duration(seconds: 3),
+    timer = Timer.periodic(Duration(seconds: interval),
         (Timer t) => checkContentEachLanguage(languageFields: languageFields));
   }
 
@@ -80,7 +74,7 @@ class _HomePageState extends State<HomePage> {
   void checkContentEachLanguage({required Map languageFields}) {
     for (String language in languageFields.keys) {
       if (languageFields[language]["isEnabled"]) {
-        print("CURRENTLY CHECKING FOR $language each $intervalValue interval");
+        //print("CURRENTLY CHECKING FOR $language each $intervalValue interval");
         languageFields[language]["lastNotif"] = DateTime.now();
       }
     }
