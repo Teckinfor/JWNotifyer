@@ -23,7 +23,7 @@ class Fetcher {
   }
 
   Fetcher({String language = "None"}) {
-    _initial = _link[language]!;
+    _initial = _link[language] ?? "NN";
     notif = ((language == "None") ? null : fetchElements());
   }
 
