@@ -72,13 +72,16 @@ class _HomePageState extends State<HomePage> {
   ///////////////////////
 
   // Fetching informations on JW.ORG
-  void checkContentEachLanguage({required Map languageFields}) {
+  void checkContentEachLanguage({required Map languageFields}) async {
     for (String language in languageFields.keys) {
       if (languageFields[language]["isEnabled"]) {
         print("CURRENTLY CHECKING FOR $language with $intervalValue interval");
-        languageFields[language]["lastNotif"] =
-            Fetcher(language: language).notif ??
-                languageFields[language]["lastNotif"];
+
+        Fetcher fetchLanguage = await Fetcher(language: language);
+        (fetchLanguage.isNotif)
+            ? languageFields[language]["lastNotif"] = DateTime.now()
+            : '';
+        print(languageFields[language]["lastNotif"]);
       }
     }
   }

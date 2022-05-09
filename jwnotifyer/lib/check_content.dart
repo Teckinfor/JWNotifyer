@@ -8,7 +8,7 @@ class Fetcher {
 
   List newContentToNotify = [];
 
-  DateTime? notif;
+  bool isNotif = false;
 
   // Continue listing
   final Map<String, String> _link = {
@@ -25,7 +25,8 @@ class Fetcher {
 
   Fetcher({String language = "None"}) {
     _initial = _link[language] ?? "NN";
-    ((language == "None") ? null : fetchElements());
+    ((language == "None") ? null : fetchElements(isNotif));
+    print(isNotif);
   }
 
   Map<String, bool> getLinks() {
@@ -36,9 +37,12 @@ class Fetcher {
     return supportedLanguages;
   }
 
-  void fetchElements() async {
+  void fetchElements(bool Notif) async {
     Map newContent = getNewElement() ?? {"status": "ERROR"};
-    notif = (await thereIsNewContent(newContent) ? makeNotification() : null);
+    if (await thereIsNewContent(newContent)) {
+      Notif = true;
+      makeNotification();
+    }
   }
 
   /*
@@ -79,7 +83,7 @@ class Fetcher {
         "initial": "EN",
         "status": "OK",
         "content": [
-          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+          {"title": "MyTitle2", "img": "UrlToImage", "url": "https://jw.org"},
           {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
           {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
           {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
@@ -120,9 +124,9 @@ class Fetcher {
     return true;
   }
 
-  DateTime? makeNotification() {
+  bool makeNotification() {
     if (newContentToNotify.isEmpty) {
-      return null;
+      return false;
     }
 
     print("Notification");
@@ -130,7 +134,7 @@ class Fetcher {
     for (Map article in newContentToNotify) {
       NotificationService().init(article);
     }
-    return DateTime.now();
+    return true;
   }
 
   /*
