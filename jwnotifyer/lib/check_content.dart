@@ -87,6 +87,3 @@ class Fetcher {
     return DateTime.now();
   }
 }
-
-// TO DO :
-// Utiliser le link pour avoir la liste des langues centralisée
