@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     }
 
     // Auto check (must be modified)
-    timer = Timer.periodic(Duration(seconds: interval),
+    timer = Timer.periodic(Duration(seconds: 10),
         (Timer t) => checkContentEachLanguage(languageFields: languageFields));
   }
 
@@ -76,7 +76,9 @@ class _HomePageState extends State<HomePage> {
     for (String language in languageFields.keys) {
       if (languageFields[language]["isEnabled"]) {
         print("CURRENTLY CHECKING FOR $language with $intervalValue interval");
-        //languageFields[language]["lastNotif"] = Fetcher(language: language).notif ?? languageFields[language]["lastNotif"];
+        languageFields[language]["lastNotif"] =
+            Fetcher(language: language).notif ??
+                languageFields[language]["lastNotif"];
       }
     }
   }

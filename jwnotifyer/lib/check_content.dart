@@ -24,7 +24,7 @@ class Fetcher {
 
   Fetcher({String language = "None"}) {
     _initial = _link[language] ?? "NN";
-    notif = ((language == "None") ? null : fetchElements());
+    ((language == "None") ? null : fetchElements());
   }
 
   Map<String, bool> getLinks() {
@@ -35,9 +35,9 @@ class Fetcher {
     return supportedLanguages;
   }
 
-  DateTime? fetchElements() {
+  void fetchElements() async {
     Map newContent = getNewElement() ?? {"status": "ERROR"};
-    return (thereIsNewContent(newContent) ? makeNotification() : null);
+    notif = (await thereIsNewContent(newContent) ? makeNotification() : null);
   }
 
   /*
@@ -74,14 +74,24 @@ class Fetcher {
 
   Map? getNewElement() {
     if (_initial != "NN") {
-      Map test = {};
+      Map test = {
+        "initial": "EN",
+        "status": "OK",
+        "content": [
+          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"}
+        ]
+      };
       return test;
     }
     return null;
   }
 
-  bool thereIsNewContent(newContent) {
-    Map existingContent = readData() as Map;
+  Future<bool> thereIsNewContent(newContent) async {
+    Map existingContent = await readData();
 
     if (existingContent["status"] == "ERROR") {
       writeData(data: newContent);
@@ -110,9 +120,11 @@ class Fetcher {
   }
 
   DateTime? makeNotification() {
-    if (newContentToNotify == []) {
+    if (newContentToNotify.isEmpty) {
       return null;
     }
+
+    print("Notification");
 
     for (Map article in newContentToNotify) {
       //NotificationService().init(article);
@@ -145,9 +157,9 @@ class Fetcher {
     try {
       final file = await _localFile;
       final data = await file.readAsString();
-      return jsonDecode(data);
+      return jsonDecode(data) as Map;
     } catch (e) {
-      return {"status": "ERROR"};
+      return {"status": "ERROR"} as Map;
     }
   }
 }
