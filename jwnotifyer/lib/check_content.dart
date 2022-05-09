@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
+import 'notification_service.dart';
 
 class Fetcher {
   String _initial = "NN";
@@ -127,7 +128,7 @@ class Fetcher {
     print("Notification");
 
     for (Map article in newContentToNotify) {
-      //NotificationService().init(article);
+      NotificationService().init(article);
     }
     return DateTime.now();
   }

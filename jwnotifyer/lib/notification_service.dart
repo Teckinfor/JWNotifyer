@@ -16,7 +16,7 @@ class NotificationService {
 
   Future<void> init(Map article) async {
     const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('app_icon');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
 
     // final IOSInitializationSettings initializationSettingsIOS =
     //     IOSInitializationSettings(
@@ -53,7 +53,7 @@ class NotificationService {
         onSelectNotification: selectNotification);
 
     await flutterLocalNotificationsPlugin.show(Random().nextInt(110000),
-        "JWNotifyer - New content", article["title"], platformChannelSpecifics,
+        article["title"], "Click here to open", platformChannelSpecifics,
         payload: article['url']);
   }
 
