@@ -5,6 +5,7 @@ import 'dart:collection';
 import 'package:jwnotifyer/check_content.dart';
 import 'settings.dart';
 import 'package:flutter/material.dart';
+import 'check_content.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -74,8 +75,8 @@ class _HomePageState extends State<HomePage> {
   void checkContentEachLanguage({required Map languageFields}) {
     for (String language in languageFields.keys) {
       if (languageFields[language]["isEnabled"]) {
-        //print("CURRENTLY CHECKING FOR $language each $intervalValue interval");
-        languageFields[language]["lastNotif"] = DateTime.now();
+        print("CURRENTLY CHECKING FOR $language with $intervalValue interval");
+        //languageFields[language]["lastNotif"] = Fetcher(language: language).notif ?? languageFields[language]["lastNotif"];
       }
     }
   }

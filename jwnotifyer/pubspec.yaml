@@ -40,6 +40,7 @@ dependencies:
   flutter_background_service: ^2.0.0
   device_info_plus: ^3.2.3
   path_provider: ^2.0.9
+  flutter_local_notifications: ^9.5.2
 
 dev_dependencies:
   flutter_test:

@@ -23,7 +23,7 @@ class Fetcher {
   }
 
   Fetcher({String language = "None"}) {
-    _initial = _link[language] ?? "NN";
+    _initial = _link[language]!;
     notif = ((language == "None") ? null : fetchElements());
   }
 
@@ -83,27 +83,25 @@ class Fetcher {
   bool thereIsNewContent(newContent) {
     Map existingContent = readData() as Map;
 
-    if(existingContent["status"] == "ERROR"){
+    if (existingContent["status"] == "ERROR") {
       writeData(data: newContent);
       return false;
     }
 
-    if(newContent["status"] == "ERROR"){
+    if (newContent["status"] == "ERROR") {
       return false;
     }
 
-    for(Map article in newContent["content"]){
+    for (Map article in newContent["content"]) {
       bool isIn = false;
 
-      for(Map existingArticle in existingContent["content"]){
-
-        if (article["title"] == existingArticle["title"]){
+      for (Map existingArticle in existingContent["content"]) {
+        if (article["title"] == existingArticle["title"]) {
           isIn = true;
         }
       }
 
       (isIn) ? "" : newContentToNotify.add(article);
-
     }
 
     writeData(data: newContent);
@@ -112,17 +110,12 @@ class Fetcher {
   }
 
   DateTime? makeNotification() {
-    if(newContentToNotify == []){
+    if (newContentToNotify == []) {
       return null;
     }
 
-    for(Map article in newContentToNotify){
-
-
-
-
-
-
+    for (Map article in newContentToNotify) {
+      //NotificationService().init(article);
     }
     return DateTime.now();
   }
