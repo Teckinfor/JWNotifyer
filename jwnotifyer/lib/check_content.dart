@@ -2,6 +2,9 @@ import 'dart:io';
 import 'dart:convert';
 import 'package:path_provider/path_provider.dart';
 import 'notification_service.dart';
+import 'package:requests/requests.dart';
+import 'package:html/parser.dart' show parse;
+import 'package:html/dom.dart';
 
 class Fetcher {
   String _initial = "NN";
@@ -44,7 +47,7 @@ class Fetcher {
   }
 
   Future<bool?> fetchElements() async {
-    Map newContent = getNewElement() ?? {"status": "ERROR"};
+    Map newContent = await getNewElement() ?? {"status": "ERROR"};
     bool isNew = await thereIsNewContent(newContent);
 
     if (isNew) {
@@ -85,27 +88,62 @@ class Fetcher {
 
   */
 
-  Map? getNewElement() {
+  Future<Map?> getNewElement() async {
     if (_initial != "NN") {
-      Map test = {
-        "initial": "EN",
-        "status": "OK",
-        "content": [
-          {"title": "MyTitle2", "img": "UrlToImage", "url": "https://jw.org"},
-          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-          {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"}
-        ]
-      };
-      return test;
+      Map document = {"initial": _initial, "status": "OK", "content": []};
+      String initialLowercase = _initial.toLowerCase();
+
+      var homeRequest =
+          await Requests.get("https://www.jw.org/$initialLowercase");
+      homeRequest.raiseForStatus();
+      var home = parse(homeRequest.content());
+
+      String whatsNewURI = home
+          .getElementsByClassName("whatsNewButton")[0]
+          .attributes["href"]
+          .toString();
+
+      var whatsNewRequest =
+          await Requests.get("https://www.jw.org/$whatsNewURI");
+      homeRequest.raiseForStatus();
+      var whatsNew = parse(whatsNewRequest.content());
+      var newContentBox = whatsNew.getElementsByClassName("whatsNewItems")[0];
+
+      for (int i = 0; i < 5; i++) {
+        Map article = {};
+        var content = (newContentBox.getElementsByClassName("synopsis")[i]);
+        article["title"] =
+            parse(content.children[1].children[2].children[0].text)
+                .documentElement!
+                .text;
+        article["img"] = content
+            .children[0].children[0].children[0].attributes["data-img-size-md"]
+            .toString();
+
+        article["url"] = "https://jw.org" +
+            content.children[0].children[0].attributes["href"].toString();
+        print(article);
+        document["content"].add(article);
+      }
+
+      return document;
     }
     return null;
   }
 
   Future<bool> thereIsNewContent(newContent) async {
-    Map existingContent = await readData();
-
+    //Map existingContent = await readData();
+    Map existingContent = {
+      "initial": "EN",
+      "status": "OK",
+      "content": [
+        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"}
+      ]
+    };
     if (existingContent["status"] == "ERROR") {
       await writeData(data: newContent);
       return false;
