@@ -158,6 +158,8 @@ class _HomePageState extends State<HomePage> {
                             };
                             supportedLanguages[language] =
                                 supportedLanguages[language] ? false : true;
+                            Navigator.of(context, rootNavigator: true)
+                                .pop('dialog');
                           });
                         },
                         child: const Icon(Icons.add),
@@ -241,15 +243,17 @@ class _HomePageState extends State<HomePage> {
           onPressed: () {
             showDialog(
                 context: context,
-                builder: (BuildContext context) {
-                  return AlertDialog(
-                      title: const Text("Languages"),
-                      content: SingleChildScrollView(
-                          child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: allLanguageList(
-                                  supportedLanguages: supportedLanguages,
-                                  languageFields: languageFields))));
+                builder: (context) {
+                  return StatefulBuilder(builder: (context, setState) {
+                    return AlertDialog(
+                        title: const Text("Languages"),
+                        content: SingleChildScrollView(
+                            child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: allLanguageList(
+                                    supportedLanguages: supportedLanguages,
+                                    languageFields: languageFields))));
+                  });
                 });
           },
           style: ButtonStyle(

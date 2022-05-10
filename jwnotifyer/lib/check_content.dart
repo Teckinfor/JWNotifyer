@@ -19,7 +19,12 @@ class Fetcher {
     "Español": "ES",
     "English": "EN",
     "Italiano": "IT",
-    "Nederlands": "ND"
+    "Nederlands": "NL",
+    "Deutsch": "DE",
+    "Svenska": "SV",
+    "Norsk": "NO",
+    "Grec": "EL",
+    "Russian": "RU",
   };
 
   set setInitial(String newInitial) {
