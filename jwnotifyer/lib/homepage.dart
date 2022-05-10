@@ -2,6 +2,7 @@
 
 import 'dart:async';
 import 'dart:collection';
+import 'dart:io';
 import 'package:jwnotifyer/check_content.dart';
 import 'settings.dart';
 import 'package:flutter/material.dart';
@@ -77,11 +78,10 @@ class _HomePageState extends State<HomePage> {
       if (languageFields[language]["isEnabled"]) {
         print("CURRENTLY CHECKING FOR $language with $intervalValue interval");
 
-        Fetcher fetchLanguage = await Fetcher(language: language);
-        (fetchLanguage.isNotif)
-            ? languageFields[language]["lastNotif"] = DateTime.now()
-            : '';
-        print(languageFields[language]["lastNotif"]);
+        Fetcher fetchLanguage = Fetcher(language: language);
+        if (await fetchLanguage.main() ?? false) {
+          languageFields[language]["lastNotif"] = DateTime.now();
+        }
       }
     }
   }

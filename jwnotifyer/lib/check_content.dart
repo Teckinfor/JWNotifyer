@@ -25,8 +25,14 @@ class Fetcher {
 
   Fetcher({String language = "None"}) {
     _initial = _link[language] ?? "NN";
-    ((language == "None") ? null : fetchElements(isNotif));
-    print(isNotif);
+  }
+
+  Future<bool?> main() async {
+    if (_initial != "NN") {
+      isNotif = await fetchElements() ?? false;
+      return isNotif;
+    }
+    return isNotif;
   }
 
   Map<String, bool> getLinks() {
@@ -37,12 +43,14 @@ class Fetcher {
     return supportedLanguages;
   }
 
-  void fetchElements(bool Notif) async {
+  Future<bool?> fetchElements() async {
     Map newContent = getNewElement() ?? {"status": "ERROR"};
-    if (await thereIsNewContent(newContent)) {
-      Notif = true;
+    bool isNew = await thereIsNewContent(newContent);
+
+    if (isNew) {
       makeNotification();
     }
+    return isNew;
   }
 
   /*
@@ -99,7 +107,7 @@ class Fetcher {
     Map existingContent = await readData();
 
     if (existingContent["status"] == "ERROR") {
-      writeData(data: newContent);
+      await writeData(data: newContent);
       return false;
     }
 
@@ -119,9 +127,12 @@ class Fetcher {
       (isIn) ? "" : newContentToNotify.add(article);
     }
 
-    writeData(data: newContent);
-
-    return true;
+    if (!newContentToNotify.isEmpty) {
+      await writeData(data: newContent);
+      return true;
+    } else {
+      return false;
+    }
   }
 
   bool makeNotification() {
