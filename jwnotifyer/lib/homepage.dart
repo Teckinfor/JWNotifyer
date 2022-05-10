@@ -32,6 +32,8 @@ class _HomePageState extends State<HomePage> {
   // Set "Normal" as default value of interval
   String intervalValue = "Normal";
 
+  int interval = 60;
+
   /////////////////////////////
   ////// State functions //////
   /////////////////////////////
@@ -40,26 +42,11 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
 
-    int interval = 3600;
-    switch (intervalValue) {
-      case "Slow":
-        {
-          interval = 21600; // 6 hours
-          break;
-        }
-      case "Fast":
-        {
-          interval = 1800; // 30 minutes
-          break;
-        }
-      default:
-        interval = 3600; // 1 hour
-        break;
-    }
-
     // Auto check (must be modified)
-    timer = Timer.periodic(Duration(seconds: 10),
-        (Timer t) => checkContentEachLanguage(languageFields: languageFields));
+    timer = Timer.periodic(Duration(seconds: interval), (Timer t) {
+      checkContentEachLanguage(languageFields: languageFields);
+      print(interval);
+    });
   }
 
   @override
@@ -304,6 +291,27 @@ class _HomePageState extends State<HomePage> {
               MaterialPageRoute(
                   builder: (context) => Settings(intervalUsed: intervalValue)),
             );
+
+            switch (intervalValue) {
+              case "Slow":
+                {
+                  interval = 21600; // 6 hours
+                  break;
+                }
+              case "Fast":
+                {
+                  interval = 1800; // 30 minutes
+                  break;
+                }
+              case "Debug":
+                {
+                  interval = 30; // 30 secondes
+                  break;
+                }
+              default:
+                interval = 3600; // 1 hour
+                break;
+            }
           }),
       body: Container(
         color: Colors.grey,

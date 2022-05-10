@@ -38,7 +38,13 @@ class _SettingsState extends State<Settings> {
             "Slow (6h)",
             style: TextStyle(fontSize: 15),
           ),
-          value: "Slow")
+          value: "Slow"),
+      const DropdownMenuItem(
+          child: Text(
+            "Debug Mode",
+            style: TextStyle(fontSize: 15),
+          ),
+          value: "Debug")
     ];
     return checkInterval;
   }

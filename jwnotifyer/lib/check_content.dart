@@ -4,7 +4,6 @@ import 'package:path_provider/path_provider.dart';
 import 'notification_service.dart';
 import 'package:requests/requests.dart';
 import 'package:html/parser.dart' show parse;
-import 'package:html/dom.dart';
 
 class Fetcher {
   String _initial = "NN";
@@ -137,18 +136,18 @@ class Fetcher {
   }
 
   Future<bool> thereIsNewContent(newContent) async {
-    //Map existingContent = await readData();
-    Map existingContent = {
-      "initial": "EN",
-      "status": "OK",
-      "content": [
-        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-        {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"}
-      ]
-    };
+    Map existingContent = await readData();
+    // Map existingContent = {
+    //   "initial": "EN",
+    //   "status": "OK",
+    //   "content": [
+    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"}
+    //   ]
+    // };
     if (existingContent["status"] == "ERROR") {
       await writeData(data: newContent);
       return false;
