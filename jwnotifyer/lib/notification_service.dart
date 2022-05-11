@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:io';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'dart:math';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -36,7 +39,9 @@ class NotificationService {
         AndroidNotificationDetails(article["title"], article["title"],
             channelDescription: "Notification from JWNotifyer",
             importance: Importance.high,
-            priority: Priority.high);
+            priority: Priority.high,
+            largeIcon: FilePathAndroidBitmap(article["img"])
+            );
 
     const IOSNotificationDetails iOSPlatformChannelSpecifics =
         IOSNotificationDetails(
@@ -54,10 +59,12 @@ class NotificationService {
 
     await flutterLocalNotificationsPlugin.show(Random().nextInt(110000),
         article["title"], "Click here to open", platformChannelSpecifics,
-        payload: article['url']);
+        payload: jsonEncode({"url":article["url"], "img":article["img"]}));
   }
 
   void selectNotification(String? payload) async {
-    await launchUrlString(payload ?? "https://jw.org");
+    Map jsonDecoded = jsonDecode(payload??'''{}''');
+    await launchUrlString(jsonDecoded["url"] ?? "https://jw.org");
+    File(jsonDecoded["img"]).delete();
   }
 }

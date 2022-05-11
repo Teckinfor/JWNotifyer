@@ -4,6 +4,7 @@ import 'package:path_provider/path_provider.dart';
 import 'notification_service.dart';
 import 'package:requests/requests.dart';
 import 'package:html/parser.dart' show parse;
+import 'package:image_downloader/image_downloader.dart';
 
 class Fetcher {
   String _initial = "NN";
@@ -43,7 +44,7 @@ class Fetcher {
   }
 
   Map<String, dynamic> getLinks() {
-    Map<String, dynamic> supportedLanguages = {"status":"OK"};
+    Map<String, dynamic> supportedLanguages = {"status": "OK"};
     _link.forEach((key, value) {
       supportedLanguages[key] = true;
     });
@@ -120,9 +121,11 @@ class Fetcher {
             parse(content.children[1].children[2].children[0].text)
                 .documentElement!
                 .text;
-        article["img"] = content
+
+        var imageID = await ImageDownloader.downloadImage(content
             .children[0].children[0].children[0].attributes["data-img-size-md"]
-            .toString();
+            .toString());
+        article["img"] = await ImageDownloader.findPath(imageID);
 
         article["url"] = "https://jw.org" +
             content.children[0].children[0].attributes["href"].toString();

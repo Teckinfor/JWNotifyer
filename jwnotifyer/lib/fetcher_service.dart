@@ -30,7 +30,9 @@ class FetcherService {
       androidConfiguration: AndroidConfiguration(
         onStart: onStart,
         autoStart: true,
-        isForegroundMode: false,
+
+        //Must stay in background
+        isForegroundMode: true, //Only true for debug
       ),
       iosConfiguration: IosConfiguration(
         autoStart: true,
