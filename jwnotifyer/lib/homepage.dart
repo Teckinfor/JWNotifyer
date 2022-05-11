@@ -173,8 +173,6 @@ class _HomePageState extends State<HomePage> {
     supportedLanguages.forEach((key, value) {
       st[key] = value;
     });
-    print(languageFields);
-    print(supportedLanguages);
     for (String language in st.keys) {
       if (language == "status") {
         continue;
