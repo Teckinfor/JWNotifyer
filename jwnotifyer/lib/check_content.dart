@@ -43,7 +43,7 @@ class Fetcher {
   }
 
   Map<String, dynamic> getLinks() {
-    Map<String, dynamic> supportedLanguages = {"status":"OK"};
+    Map<String, dynamic> supportedLanguages = {"status": "OK"};
     _link.forEach((key, value) {
       supportedLanguages[key] = true;
     });
@@ -92,6 +92,7 @@ class Fetcher {
 
   */
 
+  // MUST INCLUDE VIDEOS
   Future<Map?> getNewElement() async {
     if (_initial != "NN") {
       Map document = {"initial": _initial, "status": "OK", "content": []};
@@ -126,7 +127,6 @@ class Fetcher {
 
         article["url"] = "https://jw.org" +
             content.children[0].children[0].attributes["href"].toString();
-        print(article);
         document["content"].add(article);
       }
 
