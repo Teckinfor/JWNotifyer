@@ -2,11 +2,11 @@
 
 import 'dart:async';
 import 'dart:collection';
-import 'dart:io';
 import 'package:jwnotifyer/check_content.dart';
 import 'settings.dart';
 import 'package:flutter/material.dart';
 import 'check_content.dart';
+import 'store_data.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -21,10 +21,10 @@ class _HomePageState extends State<HomePage> {
   ///////////////////////
 
   // Languages added to the HomePage
-  Map languageFields = {};
+  Map languageFields = {"status":"OK"};
 
   // All languages (true : not added to the HomePage)
-  Map supportedLanguages = Fetcher().getLinks();
+  Map supportedLanguages = {};
 
   // Set a timer
   Timer? timer;
@@ -32,7 +32,44 @@ class _HomePageState extends State<HomePage> {
   // Set "Normal" as default value of interval
   String intervalValue = "Normal";
 
-  int interval = 60;
+  // /!\ MUST BE CHANGE TO 3600
+  int interval = 3600;
+
+
+  /////////////////////////////
+  ///// Storage functions /////
+  /////////////////////////////
+
+  Future<int> getContext() async {
+    List tmpContext  = await StoreData().getCurrentContext;
+
+    if(tmpContext[0]["status"] == "ERROR"){
+      languageFields = {"status":"OK"};
+      supportedLanguages = Fetcher().getLinks();
+      return 1;
+    } else {languageFields = tmpContext[0];}
+    
+    if(tmpContext[1]["status"] == "ERROR"){
+      intervalValue = "Normal";
+      interval = 3600;
+    } else {
+      intervalValue = tmpContext[1]["value"];
+      interval = tmpContext[1]["seconds"];
+    }
+
+    if(tmpContext[2]["status"] == "ERROR"){
+      languageFields = {"status":"OK"};
+      supportedLanguages = Fetcher().getLinks();
+      return 1;
+    } else {supportedLanguages = tmpContext[2];}
+
+    return 0;
+  }
+
+  void saveContext() {
+    StoreData().saveCurrentContext(dataActiveLanguages: languageFields, dataSettings: {"value":intervalValue, "seconds":interval, "status":"OK"}, dataAvailableLanguages: supportedLanguages);
+  }
+
 
   /////////////////////////////
   ////// State functions //////
@@ -141,12 +178,13 @@ class _HomePageState extends State<HomePage> {
                             languageFields[language] = {
                               "isEnabled": false,
                               "infoMessage": "Disabled",
-                              "lastNotif": null
+                              "lastNotif": null,
                             };
                             supportedLanguages[language] =
                                 supportedLanguages[language] ? false : true;
                             Navigator.of(context, rootNavigator: true)
                                 .pop('dialog');
+                            saveContext();
                           });
                         },
                         child: const Icon(Icons.add),
@@ -180,6 +218,7 @@ class _HomePageState extends State<HomePage> {
                           languageFields.remove(language);
                           supportedLanguages[language] =
                               supportedLanguages[language] ? false : true;
+                          saveContext();
                         });
                       },
                       icon: const Icon(
@@ -197,15 +236,10 @@ class _HomePageState extends State<HomePage> {
                   value: languageFields[language]['isEnabled'],
                   onChanged: (newValue) {
                     setState(() {
-                      //////////////////////////////////////////////////////////////// DEBUG FUNCTION
-                      //////////////////////////////////////////////////////////////// Used to detect the device language for a future feature
-                      //final List<Locale> locales =
-                      //    WidgetsBinding.instance!.window.locales;
-                      //print(locales);
-                      //////////////////////////////////////////////////////////////// DEBUG FUNCTION
                       languageFields[language]['isEnabled'] = newValue;
                       languageFields[language]['infoMessage'] =
                           (newValue) ? "Enabled" : "Disabled";
+                      saveContext();
                     });
                   })
             ],
@@ -280,6 +314,9 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
+
+    getContext();
+
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
           icon: const Icon(Icons.settings),
@@ -312,6 +349,8 @@ class _HomePageState extends State<HomePage> {
                 interval = 3600; // 1 hour
                 break;
             }
+
+            saveContext();
           }),
       body: Container(
         color: Colors.grey,

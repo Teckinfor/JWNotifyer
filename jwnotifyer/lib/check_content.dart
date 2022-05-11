@@ -42,8 +42,8 @@ class Fetcher {
     return isNotif;
   }
 
-  Map<String, bool> getLinks() {
-    Map<String, bool> supportedLanguages = {};
+  Map<String, dynamic> getLinks() {
+    Map<String, dynamic> supportedLanguages = {"status":"OK"};
     _link.forEach((key, value) {
       supportedLanguages[key] = true;
     });
