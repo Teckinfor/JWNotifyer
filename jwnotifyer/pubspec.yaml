@@ -32,7 +32,6 @@ dependencies:
   url_launcher: ^6.1.0
   shared_preferences: ^2.0.13
   flutter_background_service: ^2.0.0
-  device_info_plus: ^3.2.3
   path_provider: ^2.0.9
   flutter_local_notifications: ^9.5.2
   requests: ^4.2.1

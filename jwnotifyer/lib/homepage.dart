@@ -3,9 +3,9 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:jwnotifyer/check_content.dart';
-import 'settings.dart';
 import 'package:flutter/material.dart';
-import 'check_content.dart';
+import 'settings.dart';
+//import 'check_content.dart';
 import 'store_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -80,10 +80,10 @@ class _HomePageState extends State<HomePage> {
     super.initState();
 
     // Auto check (must be modified)
-    timer = Timer.periodic(Duration(seconds: interval), (Timer t) {
-      checkContentEachLanguage(languageFields: languageFields);
-      print(interval);
-    });
+    // timer = Timer.periodic(Duration(seconds: interval), (Timer t) {
+    //   checkContentEachLanguage(languageFields: languageFields);
+    //   print(interval);
+    // });
   }
 
   @override
@@ -97,20 +97,20 @@ class _HomePageState extends State<HomePage> {
   ///////////////////////
 
   // Fetching informations on JW.ORG
-  void checkContentEachLanguage({required Map languageFields}) async {
-    for (String language in languageFields.keys) {
-      if (languageFields[language]["isEnabled"]) {
-        print("CURRENTLY CHECKING FOR $language with $intervalValue interval");
+  // void checkContentEachLanguage({required Map languageFields}) async {
+  //   for (String language in languageFields.keys) {
+  //     if (languageFields[language]["isEnabled"]) {
+  //       print("CURRENTLY CHECKING FOR $language with $intervalValue interval");
 
-        Fetcher fetchLanguage = Fetcher(language: language);
-        if (await fetchLanguage.main() ?? false) {
-          setState(() {
-            languageFields[language]["lastNotif"] = DateTime.now();
-          });
-        }
-      }
-    }
-  }
+  //       Fetcher fetchLanguage = Fetcher(language: language);
+  //       if (await fetchLanguage.main() ?? false) {
+  //         setState(() {
+  //           languageFields[language]["lastNotif"] = DateTime.now();
+  //         });
+  //       }
+  //     }
+  //   }
+  // }
 
   // Display the time since the last received notification
   Container lastNotificationInformation(

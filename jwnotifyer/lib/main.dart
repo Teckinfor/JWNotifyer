@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:jwnotifyer/homepage.dart';
+import 'fetcher_service.dart';
 
-void main() {
+void main() async {
+  FetcherService service = await FetcherService();
+  service.initializeService();
   runApp(const MyApp());
 }
 
