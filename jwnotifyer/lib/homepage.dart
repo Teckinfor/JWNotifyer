@@ -21,10 +21,13 @@ class _HomePageState extends State<HomePage> {
   ///////////////////////
 
   // Languages added to the HomePage
-  Map languageFields = {"status":"OK"};
+  Map languageFields = {"status": "OK"};
 
   // All languages (true : not added to the HomePage)
   Map supportedLanguages = {};
+
+  //Check if getContext is run for the first time
+  bool havingContent = false;
 
   // Set a timer
   Timer? timer;
@@ -33,43 +36,49 @@ class _HomePageState extends State<HomePage> {
   String intervalValue = "Normal";
 
   // /!\ MUST BE CHANGE TO 3600
-  int interval = 3600;
-
+  int interval = 10;
 
   /////////////////////////////
   ///// Storage functions /////
   /////////////////////////////
 
-  Future<int> getContext() async {
-    List tmpContext  = await StoreData().getCurrentContext;
+  void getContext() async {
+    List tmpContext = await StoreData().getCurrentContext;
+    setState(() {
+      if (tmpContext[0]["status"] == "ERROR" || tmpContext[0].isEmpty) {
+        languageFields = {"status": "OK"};
+        supportedLanguages = Fetcher().getLinks();
+      } else {
+        languageFields = tmpContext[0];
+      }
 
-    if(tmpContext[0]["status"] == "ERROR"){
-      languageFields = {"status":"OK"};
-      supportedLanguages = Fetcher().getLinks();
-      return 1;
-    } else {languageFields = tmpContext[0];}
-    
-    if(tmpContext[1]["status"] == "ERROR"){
-      intervalValue = "Normal";
-      interval = 3600;
-    } else {
-      intervalValue = tmpContext[1]["value"];
-      interval = tmpContext[1]["seconds"];
-    }
+      if (tmpContext[1]["status"] == "ERROR" || tmpContext[1].isEmpty) {
+        intervalValue = "Normal";
+        interval = 3600;
+      } else {
+        intervalValue = tmpContext[1]["value"];
+        interval = tmpContext[1]["seconds"];
+      }
 
-    if(tmpContext[2]["status"] == "ERROR"){
-      languageFields = {"status":"OK"};
-      supportedLanguages = Fetcher().getLinks();
-      return 1;
-    } else {supportedLanguages = tmpContext[2];}
-
-    return 0;
+      if (tmpContext[2]["status"] == "ERROR" || tmpContext[2].isEmpty) {
+        languageFields = {"status": "OK"};
+        supportedLanguages = Fetcher().getLinks();
+      } else {
+        supportedLanguages = tmpContext[2];
+      }
+    });
   }
 
   void saveContext() {
-    StoreData().saveCurrentContext(dataActiveLanguages: languageFields, dataSettings: {"value":intervalValue, "seconds":interval, "status":"OK"}, dataAvailableLanguages: supportedLanguages);
+    StoreData().saveCurrentContext(
+        dataActiveLanguages: languageFields,
+        dataSettings: {
+          "value": intervalValue,
+          "seconds": interval,
+          "status": "OK"
+        },
+        dataAvailableLanguages: supportedLanguages);
   }
-
 
   /////////////////////////////
   ////// State functions //////
@@ -82,7 +91,6 @@ class _HomePageState extends State<HomePage> {
     // Auto check (must be modified)
     timer = Timer.periodic(Duration(seconds: interval), (Timer t) {
       checkContentEachLanguage(languageFields: languageFields);
-      print(interval);
     });
   }
 
@@ -99,6 +107,9 @@ class _HomePageState extends State<HomePage> {
   // Fetching informations on JW.ORG
   void checkContentEachLanguage({required Map languageFields}) async {
     for (String language in languageFields.keys) {
+      if (language == "status") {
+        continue;
+      }
       if (languageFields[language]["isEnabled"]) {
         print("CURRENTLY CHECKING FOR $language with $intervalValue interval");
 
@@ -156,14 +167,18 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Display all languages available in "Add language" option
-  List<Container> allLanguageList(
-      {required Map supportedLanguages, required Map languageFields}) {
+  List<Container> allLanguageList() {
     List<Container> tempList = [];
-    SplayTreeMap<String, bool> st = SplayTreeMap<String, bool>();
+    SplayTreeMap<String, dynamic> st = SplayTreeMap<String, dynamic>();
     supportedLanguages.forEach((key, value) {
       st[key] = value;
     });
+    print(languageFields);
+    print(supportedLanguages);
     for (String language in st.keys) {
+      if (language == "status") {
+        continue;
+      }
       if (supportedLanguages[language]) {
         tempList.add(Container(
             height: 65,
@@ -200,10 +215,12 @@ class _HomePageState extends State<HomePage> {
   }
 
   // Display all languages added to the HomePage
-  List<Container> listActiveLanguages(
-      {required Map languageFields, required Map supportedLanguages}) {
+  List<Container> listActiveLanguages() {
     List<Container> tempList = [];
     for (String language in languageFields.keys) {
+      if (language == "status") {
+        continue;
+      }
       tempList.add(Container(
         margin: const EdgeInsets.only(left: 15, right: 15, bottom: 15),
         height: 95,
@@ -273,9 +290,7 @@ class _HomePageState extends State<HomePage> {
                         content: SingleChildScrollView(
                             child: Column(
                                 mainAxisSize: MainAxisSize.min,
-                                children: allLanguageList(
-                                    supportedLanguages: supportedLanguages,
-                                    languageFields: languageFields))));
+                                children: allLanguageList())));
                   });
                 });
           },
@@ -316,8 +331,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-
-    getContext();
+    if (!havingContent) {
+      getContext();
+      havingContent = true;
+    }
 
     return Scaffold(
       floatingActionButton: FloatingActionButton.extended(
@@ -375,10 +392,7 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: const BorderRadius.all(Radius.circular(25)),
                   border: Border.all(color: Colors.black)),
               child: SingleChildScrollView(
-                child: Column(
-                    children: listActiveLanguages(
-                        languageFields: languageFields,
-                        supportedLanguages: supportedLanguages)),
+                child: Column(children: listActiveLanguages()),
               )),
         ])),
       ),
