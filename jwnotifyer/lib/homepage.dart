@@ -104,7 +104,9 @@ class _HomePageState extends State<HomePage> {
 
         Fetcher fetchLanguage = Fetcher(language: language);
         if (await fetchLanguage.main() ?? false) {
-          languageFields[language]["lastNotif"] = DateTime.now();
+          setState(() {
+            languageFields[language]["lastNotif"] = DateTime.now();
+          });
         }
       }
     }
