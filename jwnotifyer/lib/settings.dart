@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
 import 'copyright_informations.dart';
 
 class Settings extends StatefulWidget {
@@ -99,6 +100,16 @@ class _SettingsState extends State<Settings> {
                         })
                   ],
                 ),
+                StreamBuilder<Map<String, dynamic>?>(
+                  stream: FlutterBackgroundService().on('state'),
+                  builder: (context, snapshot){
+                    if(!snapshot.hasData){
+                      return const Text("Service state : Down");
+                    } else {
+                      return const Text("Service state : UP");
+                    }
+                  },
+                )
               ]),
             ),
             Align(

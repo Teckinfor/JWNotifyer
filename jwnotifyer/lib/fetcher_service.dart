@@ -83,6 +83,14 @@ class FetcherService {
       StoreData().saveActiveLanguages(languageFields);
 
     });
+
+
+    service.invoke(
+      'state',
+      {
+        'status':'OK',
+      },
+    );
   }
   
   // Fetching informations on JW.ORG
