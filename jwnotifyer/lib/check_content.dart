@@ -62,7 +62,6 @@ class Fetcher {
   }
 
   /*
-
   {
     "initial":"EN",
     "status":"OK"
@@ -90,9 +89,9 @@ class Fetcher {
       }
     ]
   }
-
   */
 
+  // MUST INCLUDE VIDEOS
   Future<Map?> getNewElement() async {
     if (_initial != "NN") {
       Map document = {"initial": _initial, "status": "OK", "content": []};
@@ -129,7 +128,6 @@ class Fetcher {
 
         article["url"] = "https://jw.org" +
             content.children[0].children[0].attributes["href"].toString();
-        print(article);
         document["content"].add(article);
       }
 
