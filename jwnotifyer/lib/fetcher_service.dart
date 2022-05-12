@@ -14,14 +14,14 @@ class FetcherService {
   // All languages (true : not added to the HomePage)
   Map supportedLanguages = {};
 
-  // Set a timer
-  Timer? timer;
-
   // Set "Normal" as default value of interval
   String intervalValue = "Normal";
 
   // /!\ MUST BE CHANGE TO 3600
   int interval = 3600;
+
+  // For periodic time change
+  int savedInterval = 3600;
 
   Future<void> initializeService() async {
     final service = FlutterBackgroundService();
@@ -68,21 +68,8 @@ class FetcherService {
     });
 
     // ACTION
-    timer = Timer.periodic(Duration(seconds: interval), (Timer t) {
-      if (service is AndroidServiceInstance) {
-        service.setForegroundNotificationInfo(
-          title: "JWNotifyer",
-          content:
-              "Updated at ${DateTime.now()} with interval of $interval seconds",
-        );
-      }
-
-      getContext();
-
-      checkContentEachLanguage(languageFields: languageFields);
-
-      StoreData().saveActiveLanguages(languageFields);
-    });
+    getContext();
+    periodicTask(service);
 
     service.invoke(
       'state',
@@ -130,5 +117,30 @@ class FetcherService {
     } else {
       supportedLanguages = tmpContext[2];
     }
+  }
+
+  void periodicTask(service) {
+    Timer.periodic(Duration(seconds: interval), (Timer t) {
+
+      if (service is AndroidServiceInstance) {
+        service.setForegroundNotificationInfo(
+          title: "JWNotifyer",
+          content:
+              "Updated at ${DateTime.now()} with interval of $interval seconds",
+        );
+      }
+
+      getContext();
+
+      checkContentEachLanguage(languageFields: languageFields);
+
+      StoreData().saveActiveLanguages(languageFields);
+
+      if(savedInterval != interval){
+        savedInterval = interval;
+        t.cancel();
+        periodicTask(service); 
+      }
+    });
   }
 }
