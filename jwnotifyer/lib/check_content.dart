@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:path_provider/path_provider.dart';
 import 'notification_service.dart';
 import 'package:requests/requests.dart';
 import 'package:html/parser.dart' show parse;
+import 'package:path_provider/path_provider.dart';
 import 'package:image_downloader/image_downloader.dart';
 
 class Fetcher {
