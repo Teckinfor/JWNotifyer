@@ -69,6 +69,7 @@ class FetcherService {
 
     // ACTION
     getContext();
+    print("$intervalValue : $interval");
     periodicTask(service);
 
     service.invoke(
