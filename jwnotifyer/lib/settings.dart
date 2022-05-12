@@ -139,7 +139,7 @@ class _SettingsState extends State<Settings> {
                                         ),
                                         FloatingActionButton.extended(
                                           onPressed: (() {
-                                            DeleteAllContent();
+                                            deleteAllContent();
                                           }),
                                           label: const Text("Yes"),
                                         )
@@ -175,7 +175,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void DeleteAllContent() async{
+  void deleteAllContent() async{
     final directory = await getApplicationDocumentsDirectory();
     File('$directory/ActiveLanguages.json').delete();
     File('$directory/Settings.json').delete();
