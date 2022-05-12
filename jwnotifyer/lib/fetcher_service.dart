@@ -8,9 +8,8 @@ import 'dart:async';
 // ONLY ANDROID, MUST DO IOS
 
 class FetcherService {
-
   // Languages added to the HomePage
-  Map languageFields = {"status":"OK"};
+  Map languageFields = {"status": "OK"};
 
   // All languages (true : not added to the HomePage)
   Map supportedLanguages = {};
@@ -83,21 +82,22 @@ class FetcherService {
       checkContentEachLanguage(languageFields: languageFields);
 
       StoreData().saveActiveLanguages(languageFields);
-
     });
-
 
     service.invoke(
       'state',
       {
-        'status':'OK',
+        'status': 'OK',
       },
     );
   }
-  
+
   // Fetching informations on JW.ORG
   void checkContentEachLanguage({required Map languageFields}) async {
     for (String language in languageFields.keys) {
+      if (language == "status") {
+        continue;
+      }
       if (languageFields[language]["isEnabled"]) {
         Fetcher fetchLanguage = Fetcher(language: language);
         if (await fetchLanguage.main() ?? false) {
@@ -107,18 +107,16 @@ class FetcherService {
     }
   }
 
-  Future<int> getContext() async {
+  void getContext() async {
     List tmpContext = await StoreData().getCurrentContext;
-
-    if (tmpContext[0]["status"] == "ERROR") {
+    if (tmpContext[0]["status"] == "ERROR" || tmpContext[0].isEmpty) {
       languageFields = {"status": "OK"};
       supportedLanguages = Fetcher().getLinks();
-      return 1;
     } else {
       languageFields = tmpContext[0];
     }
 
-    if (tmpContext[1]["status"] == "ERROR") {
+    if (tmpContext[1]["status"] == "ERROR" || tmpContext[1].isEmpty) {
       intervalValue = "Normal";
       interval = 3600;
     } else {
@@ -126,14 +124,11 @@ class FetcherService {
       interval = tmpContext[1]["seconds"];
     }
 
-    if (tmpContext[2]["status"] == "ERROR") {
+    if (tmpContext[2]["status"] == "ERROR" || tmpContext[2].isEmpty) {
       languageFields = {"status": "OK"};
       supportedLanguages = Fetcher().getLinks();
-      return 1;
     } else {
       supportedLanguages = tmpContext[2];
     }
-
-    return 0;
   }
 }
