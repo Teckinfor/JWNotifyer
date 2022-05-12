@@ -37,6 +37,7 @@ dependencies:
   requests: ^4.2.1
   html: ^0.15.0
   image_downloader: ^0.20.1
+  restart_app: ^1.1.0
   flutter:
     sdk: flutter
 

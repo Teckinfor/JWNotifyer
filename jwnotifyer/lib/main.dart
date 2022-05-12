@@ -3,8 +3,8 @@ import 'package:jwnotifyer/homepage.dart';
 import 'fetcher_service.dart';
 
 void main() async {
-  FetcherService service = await FetcherService();
-  service.initializeService();
+  // Wait the service
+  await FetcherService().initializeService();
   runApp(const MyApp());
 }
 
@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       home: const HomePage(),
       theme: ThemeData(
         fontFamily: 'Oxygen',
-        primaryColor: Colors.deepPurple,
+        primaryColor: Colors.grey,
       ),
     );
   }

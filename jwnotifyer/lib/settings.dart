@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:restart_app/restart_app.dart';
 import 'copyright_informations.dart';
+import 'dart:io';
 
 class Settings extends StatefulWidget {
   final String intervalUsed;
@@ -102,14 +105,53 @@ class _SettingsState extends State<Settings> {
                 ),
                 StreamBuilder<Map<String, dynamic>?>(
                   stream: FlutterBackgroundService().on('state'),
-                  builder: (context, snapshot){
-                    if(!snapshot.hasData){
+                  builder: (context, snapshot) {
+                    if (!snapshot.hasData) {
                       return const Text("Service state : Down");
                     } else {
                       return const Text("Service state : UP");
                     }
                   },
-                )
+                ),
+                FloatingActionButton.extended(
+                  onPressed: () {
+                    // Confirmation
+                    showDialog(
+                        context: context,
+                        builder: (context) {
+                          return StatefulBuilder(builder: (context, setState) {
+                            return AlertDialog(
+                                title: const Text("WAIT !"),
+                                content: SingleChildScrollView(
+                                    child: Column(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                      const Text(
+                                          "Are you sure you want to delete all the settings files?"),
+                                      Row(children: [
+                                        FloatingActionButton.extended(
+                                          onPressed: (() {
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop('dialog');
+                                          }),
+                                          label: const Text("Cancel"),
+                                        ),
+                                        FloatingActionButton.extended(
+                                          onPressed: (() {
+                                            DeleteAllContent();
+                                          }),
+                                          label: const Text("Yes"),
+                                        )
+                                      ])
+                                    ])));
+                          });
+                        });
+                  },
+                  backgroundColor: Colors.red,
+                  icon: const Icon(Icons.delete),
+                  label: const Text("DELETE ALL SETTINGS"),
+                ),
               ]),
             ),
             Align(
@@ -131,5 +173,13 @@ class _SettingsState extends State<Settings> {
       ),
       bottomSheet: const CopyrightInformations(),
     );
+  }
+
+  void DeleteAllContent() async{
+    final directory = await getApplicationDocumentsDirectory();
+    File('$directory/ActiveLanguages.json').delete();
+    File('$directory/Settings.json').delete();
+    File('$directory/AvailalbleLanguages.json').delete();
+    Restart.restartApp();
   }
 }
