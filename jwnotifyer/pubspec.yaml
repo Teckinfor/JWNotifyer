@@ -18,6 +18,7 @@ dependencies:
   requests: ^4.2.1  # HTTP requests
   html: ^0.15.0 # To parse html content
   restart_app: ^1.1.0 # To restart the application in the function deleteAllContent()
+  intl: ^0.17.0 # To convert a DateTime
   flutter:
     sdk: flutter
 

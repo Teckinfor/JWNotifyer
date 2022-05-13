@@ -104,23 +104,6 @@ class _SettingsState extends State<Settings> {
                   ],
                 ),
                 Row(
-                  children: [
-                    Container(
-                      margin: const EdgeInsets.only(top: 40, bottom: 40),
-                      child: StreamBuilder<Map<String, dynamic>?>(
-                        stream: FlutterBackgroundService().on('state'),
-                        builder: (context, snapshot) {
-                          if (!snapshot.hasData) {
-                            return const Text("Service state : Down");
-                          } else {
-                            return const Text("Service state : UP");
-                          }
-                        },
-                      ),
-                    )
-                  ],
-                ),
-                Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(

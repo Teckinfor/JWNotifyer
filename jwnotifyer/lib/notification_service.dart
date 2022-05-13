@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -35,8 +34,8 @@ class NotificationService {
             macOS: null);
 
     AndroidNotificationDetails androidPlatformChannelSpecifics =
-        AndroidNotificationDetails(
-      article["title"], article["title"],
+        const AndroidNotificationDetails(
+      'Notification by language', 'Notification by language',
       channelDescription: "Notification from JWNotifyer",
       importance: Importance.high,
       priority: Priority.high,
@@ -65,6 +64,5 @@ class NotificationService {
   void selectNotification(String? payload) async {
     Map jsonDecoded = jsonDecode(payload ?? '''{}''');
     await launchUrlString(jsonDecoded["url"] ?? "https://jw.org");
-    //File(jsonDecoded["img"]).delete();
   }
 }

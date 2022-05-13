@@ -63,12 +63,12 @@ class StoreData {
 
   Future<File> get _localFileAvailableLanguages async {
     final path = await _localPath;
-    print(path);
     return File('$path/AvailalbleLanguages.json');
   }
 
   Future<File> writeData(var localFile, Map data) async {
     final file = await localFile;
+    print(data);
     var jsonText = jsonEncode(data);
     return file.writeAsString(jsonText);
   }

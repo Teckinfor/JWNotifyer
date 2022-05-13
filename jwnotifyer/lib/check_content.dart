@@ -143,10 +143,10 @@ class Fetcher {
     //   "status": "OK",
     //   "content": [
     //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"}
+    //     {"title": "MyTitle1", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle2", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle3", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle4", "img": "UrlToImage", "url": "UrlToPage"}
     //   ]
     // };
     if (existingContent["status"] == "ERROR") {
@@ -182,8 +182,6 @@ class Fetcher {
     if (newContentToNotify.isEmpty) {
       return false;
     }
-
-    print("Notification");
 
     for (Map article in newContentToNotify) {
       NotificationService().init(article);
