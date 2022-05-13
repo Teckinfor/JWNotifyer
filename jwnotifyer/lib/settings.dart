@@ -193,9 +193,9 @@ class _SettingsState extends State<Settings> {
 
   void deleteAllContent() async {
     final directory = await getApplicationDocumentsDirectory();
-    File('$directory/ActiveLanguages.json').delete();
-    File('$directory/Settings.json').delete();
-    File('$directory/AvailalbleLanguages.json').delete();
+    await File('$directory/ActiveLanguages.json').delete();
+    await File('$directory/Settings.json').delete();
+    await File('$directory/AvailalbleLanguages.json').delete();
     Restart.restartApp();
   }
 }
