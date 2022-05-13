@@ -5,7 +5,6 @@ import 'dart:collection';
 import 'package:jwnotifyer/check_content.dart';
 import 'package:flutter/material.dart';
 import 'settings.dart';
-//import 'check_content.dart';
 import 'store_data.dart';
 
 class HomePage extends StatefulWidget {
