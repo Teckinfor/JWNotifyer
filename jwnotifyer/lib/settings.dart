@@ -103,55 +103,71 @@ class _SettingsState extends State<Settings> {
                         })
                   ],
                 ),
-                StreamBuilder<Map<String, dynamic>?>(
-                  stream: FlutterBackgroundService().on('state'),
-                  builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
-                      return const Text("Service state : Down");
-                    } else {
-                      return const Text("Service state : UP");
-                    }
-                  },
+                Row(
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(top: 40, bottom: 40),
+                      child: StreamBuilder<Map<String, dynamic>?>(
+                        stream: FlutterBackgroundService().on('state'),
+                        builder: (context, snapshot) {
+                          if (!snapshot.hasData) {
+                            return const Text("Service state : Down");
+                          } else {
+                            return const Text("Service state : UP");
+                          }
+                        },
+                      ),
+                    )
+                  ],
                 ),
-                FloatingActionButton.extended(
-                  onPressed: () {
-                    // Confirmation
-                    showDialog(
-                        context: context,
-                        builder: (context) {
-                          return StatefulBuilder(builder: (context, setState) {
-                            return AlertDialog(
-                                title: const Text("WAIT !"),
-                                content: SingleChildScrollView(
-                                    child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                      const Text(
-                                          "Are you sure you want to delete all the settings files?"),
-                                      Row(children: [
-                                        FloatingActionButton.extended(
-                                          onPressed: (() {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop('dialog');
-                                          }),
-                                          label: const Text("Cancel"),
-                                        ),
-                                        FloatingActionButton.extended(
-                                          onPressed: (() {
-                                            deleteAllContent();
-                                          }),
-                                          label: const Text("Yes"),
-                                        )
-                                      ])
-                                    ])));
-                          });
-                        });
-                  },
-                  backgroundColor: Colors.red,
-                  icon: const Icon(Icons.delete),
-                  label: const Text("DELETE ALL SETTINGS"),
-                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 20, bottom: 150),
+                      child: FloatingActionButton.extended(
+                        onPressed: () {
+                          // Confirmation
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return AlertDialog(
+                                      title: const Text("WAIT !"),
+                                      content: SingleChildScrollView(
+                                          child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                            const Text(
+                                                "Are you sure you want to delete all the settings files?"),
+                                            Row(children: [
+                                              FloatingActionButton.extended(
+                                                onPressed: (() {
+                                                  Navigator.of(context,
+                                                          rootNavigator: true)
+                                                      .pop('dialog');
+                                                }),
+                                                label: const Text("Cancel"),
+                                              ),
+                                              FloatingActionButton.extended(
+                                                onPressed: (() {
+                                                  deleteAllContent();
+                                                }),
+                                                label: const Text("Yes"),
+                                              )
+                                            ])
+                                          ])));
+                                });
+                              });
+                        },
+                        backgroundColor: Colors.red,
+                        icon: const Icon(Icons.delete),
+                        label: const Text("DELETE ALL SETTINGS"),
+                      ),
+                    ),
+                  ],
+                )
               ]),
             ),
             Align(
@@ -175,7 +191,7 @@ class _SettingsState extends State<Settings> {
     );
   }
 
-  void deleteAllContent() async{
+  void deleteAllContent() async {
     final directory = await getApplicationDocumentsDirectory();
     File('$directory/ActiveLanguages.json').delete();
     File('$directory/Settings.json').delete();
