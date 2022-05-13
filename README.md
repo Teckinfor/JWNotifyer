@@ -1,7 +1,7 @@
 # JWNotifyer
 Custom app to receive notification when new content is available on JW.ORG
 
-The project is scheduled to be completed by the end of June 2022.
+The project is scheduled to be completed in June 2022.
 Thank you for your interest and expectation.
 
 ## The future of the application?
