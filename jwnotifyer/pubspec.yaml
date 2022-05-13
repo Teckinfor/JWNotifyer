@@ -12,7 +12,6 @@ environment:
 dependencies:
   cupertino_icons: ^1.0.2 # For iOS UI
   url_launcher: ^6.1.0  # To redirect on a webpage
-  shared_preferences: ^2.0.13 # To save context of the application
   flutter_background_service: ^2.0.0  # To create a background service
   path_provider: ^2.0.9 # To manage paths
   flutter_local_notifications: ^9.5.2 # Notifications

@@ -389,8 +389,7 @@ class _HomePageState extends State<HomePage> {
                   borderRadius: const BorderRadius.all(Radius.circular(25)),
                   border: Border.all(color: Colors.black)),
               child: SingleChildScrollView(
-                child: Column(
-                    children: listActiveLanguages()),
+                child: Column(children: listActiveLanguages()),
               )),
         ])),
       ),

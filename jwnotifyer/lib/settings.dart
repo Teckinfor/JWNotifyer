@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:path_provider/path_provider.dart';
+import 'store_data.dart';
 import 'package:restart_app/restart_app.dart';
 import 'copyright_informations.dart';
 import 'dart:io';
@@ -124,8 +124,9 @@ class _SettingsState extends State<Settings> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     Container(
-                      margin: const EdgeInsets.only(left: 20, bottom: 150),
+                      margin: const EdgeInsets.only(left: 0, bottom: 50),
                       child: FloatingActionButton.extended(
+                        heroTag: "delete",
                         onPressed: () {
                           // Confirmation
                           showDialog(
@@ -139,24 +140,37 @@ class _SettingsState extends State<Settings> {
                                           child: Column(
                                               mainAxisSize: MainAxisSize.min,
                                               children: [
-                                            const Text(
-                                                "Are you sure you want to delete all the settings files?"),
-                                            Row(children: [
-                                              FloatingActionButton.extended(
-                                                onPressed: (() {
-                                                  Navigator.of(context,
-                                                          rootNavigator: true)
-                                                      .pop('dialog');
-                                                }),
-                                                label: const Text("Cancel"),
-                                              ),
-                                              FloatingActionButton.extended(
-                                                onPressed: (() {
-                                                  deleteAllContent();
-                                                }),
-                                                label: const Text("Yes"),
-                                              )
-                                            ])
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(bottom: 30),
+                                              child: const Text(
+                                                  "Are you sure you want to delete all the settings files?"),
+                                            ),
+                                            Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  FloatingActionButton.extended(
+                                                    heroTag: "Cancel",
+                                                    onPressed: (() {
+                                                      Navigator.of(context,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .pop('dialog');
+                                                    }),
+                                                    label: const Text("Cancel"),
+                                                  ),
+                                                  FloatingActionButton.extended(
+                                                    onPressed: (() {
+                                                      deleteAllContent();
+                                                    }),
+                                                    heroTag: "Confirm",
+                                                    label:
+                                                        const Text("Confirm"),
+                                                    backgroundColor: Colors.red,
+                                                  )
+                                                ])
                                           ])));
                                 });
                               });
@@ -192,10 +206,7 @@ class _SettingsState extends State<Settings> {
   }
 
   void deleteAllContent() async {
-    final directory = await getApplicationDocumentsDirectory();
-    await File('$directory/ActiveLanguages.json').delete();
-    await File('$directory/Settings.json').delete();
-    await File('$directory/AvailalbleLanguages.json').delete();
+    StoreData().deleteFiles();
     Restart.restartApp();
   }
 }

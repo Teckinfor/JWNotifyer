@@ -35,15 +35,15 @@ class StoreData {
   }
 
   Future<Map> get getActiveLanguages async {
-    return await readData(_localFileActiveLanguages);
+    return await readData(await _localFileActiveLanguages);
   }
 
   Future<Map> get getSettings async {
-    return await readData(_localFileSettings);
+    return await readData(await _localFileSettings);
   }
 
   Future<Map> get getAvailableLanguages async {
-    return await readData(_localFileAvailableLanguages);
+    return await readData(await _localFileAvailableLanguages);
   }
 
   Future<String> get _localPath async {
@@ -63,6 +63,7 @@ class StoreData {
 
   Future<File> get _localFileAvailableLanguages async {
     final path = await _localPath;
+    print(path);
     return File('$path/AvailalbleLanguages.json');
   }
 
@@ -79,6 +80,21 @@ class StoreData {
       return jsonDecode(data) ?? {"status": "ERROR"};
     } catch (e) {
       return {"status": "ERROR"};
+    }
+  }
+
+  Future<int> deleteFiles() async {
+    try {
+      final file1 = await _localFileActiveLanguages;
+      final file2 = await _localFileSettings;
+      final file3 = await _localFileAvailableLanguages;
+
+      await file1.delete();
+      await file2.delete();
+      await file3.delete();
+      return 1;
+    } catch (e) {
+      return 0;
     }
   }
 }

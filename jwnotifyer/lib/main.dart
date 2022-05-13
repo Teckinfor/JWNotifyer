@@ -5,12 +5,11 @@ import 'store_data.dart';
 import 'check_content.dart';
 import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 import 'dart:async';
-import 'dart:io';
 
 void main() async {
   // Wait the service
   WidgetsFlutterBinding.ensureInitialized();
-  await initializeService();
+  //await initializeService();
   runApp(const MyApp());
 }
 
@@ -33,9 +32,7 @@ class MyApp extends StatelessWidget {
 /// SERVICE FUNCTIONS
 /// ONLY ANDROID, MUST DO IOS
 
-
 Future<void> initializeService() async {
-  print("Creating the service");
   final service = FlutterBackgroundService();
   await service.configure(
     androidConfiguration: AndroidConfiguration(
@@ -163,15 +160,16 @@ void periodicTask(service, languageFields, supportedLanguages, intervalValue,
             "Updated at ${DateTime.now()} with interval of $interval seconds",
       );
     }
-
+    print(0);
     await getContext(languageFields, supportedLanguages, intervalValue,
         interval, savedInterval);
-
+    print(1);
     await checkContentEachLanguage(languageFields, supportedLanguages,
         intervalValue, interval, savedInterval);
 
+    print(2);
     StoreData().saveActiveLanguages(languageFields);
-
+    print(3);
     if (savedInterval != interval) {
       savedInterval = interval;
       t.cancel();
