@@ -31,6 +31,8 @@ class MyApp extends StatelessWidget {
 }
 
 /// SERVICE FUNCTIONS
+/// ONLY ANDROID, MUST DO IOS
+
 
 Future<void> initializeService() async {
   print("Creating the service");
