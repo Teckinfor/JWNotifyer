@@ -4,7 +4,7 @@ import 'notification_service.dart';
 import 'package:requests/requests.dart';
 import 'package:html/parser.dart' show parse;
 import 'package:path_provider/path_provider.dart';
-import 'package:image_downloader/image_downloader.dart';
+//import 'package:image_downloader/image_downloader.dart';
 
 class Fetcher {
   String _initial = "NN";
@@ -121,10 +121,11 @@ class Fetcher {
                 .documentElement!
                 .text;
 
-        var imageID = await ImageDownloader.downloadImage(content
-            .children[0].children[0].children[0].attributes["data-img-size-md"]
-            .toString());
-        article["img"] = await ImageDownloader.findPath(imageID);
+        article["img"] = "nothing";
+        // var imageID = await ImageDownloader.downloadImage(content
+        //     .children[0].children[0].children[0].attributes["data-img-size-md"]
+        //     .toString());
+        // article["img"] = await ImageDownloader.findPath(imageID);
 
         article["url"] = "https://jw.org" +
             content.children[0].children[0].attributes["href"].toString();

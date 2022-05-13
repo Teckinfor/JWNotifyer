@@ -36,7 +36,7 @@ dependencies:
   flutter_local_notifications: ^9.5.2
   requests: ^4.2.1
   html: ^0.15.0
-  image_downloader: ^0.20.1
+  device_info_plus: ^3.2.3
   restart_app: ^1.1.0
   flutter:
     sdk: flutter
