@@ -1,9 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
-import 'package:path_provider/path_provider.dart';
 import 'notification_service.dart';
 import 'package:requests/requests.dart';
 import 'package:html/parser.dart' show parse;
+import 'package:path_provider/path_provider.dart';
 
 class Fetcher {
   String _initial = "NN";
@@ -61,7 +61,6 @@ class Fetcher {
   }
 
   /*
-
   {
     "initial":"EN",
     "status":"OK"
@@ -89,7 +88,6 @@ class Fetcher {
       }
     ]
   }
-
   */
 
   // MUST INCLUDE VIDEOS
@@ -121,9 +119,12 @@ class Fetcher {
             parse(content.children[1].children[2].children[0].text)
                 .documentElement!
                 .text;
-        article["img"] = content
-            .children[0].children[0].children[0].attributes["data-img-size-md"]
-            .toString();
+
+        article["img"] = "nothing";
+        // var imageID = await ImageDownloader.downloadImage(content
+        //     .children[0].children[0].children[0].attributes["data-img-size-md"]
+        //     .toString());
+        // article["img"] = await ImageDownloader.findPath(imageID);
 
         article["url"] = "https://jw.org" +
             content.children[0].children[0].attributes["href"].toString();
@@ -142,10 +143,10 @@ class Fetcher {
     //   "status": "OK",
     //   "content": [
     //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"},
-    //     {"title": "MyTitle", "img": "UrlToImage", "url": "UrlToPage"}
+    //     {"title": "MyTitle1", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle2", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle3", "img": "UrlToImage", "url": "UrlToPage"},
+    //     {"title": "MyTitle4", "img": "UrlToImage", "url": "UrlToPage"}
     //   ]
     // };
     if (existingContent["status"] == "ERROR") {
@@ -181,8 +182,6 @@ class Fetcher {
     if (newContentToNotify.isEmpty) {
       return false;
     }
-
-    print("Notification");
 
     for (Map article in newContentToNotify) {
       NotificationService().init(article);

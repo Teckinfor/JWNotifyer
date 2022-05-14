@@ -35,16 +35,16 @@ class StoreData {
   }
 
   Future<Map> get getActiveLanguages async {
-    //print(await readData(_localFileActiveLanguages));
-    return await readData(_localFileActiveLanguages);
+    return await readData(await _localFileActiveLanguages);
   }
 
   Future<Map> get getSettings async {
-    return await readData(_localFileSettings);
+    return await readData(await _localFileSettings);
   }
 
   Future<Map> get getAvailableLanguages async {
-    return await readData(_localFileAvailableLanguages);
+    return await readData(await _localFileAvailableLanguages);
+
   }
 
   Future<String> get _localPath async {
@@ -69,6 +69,7 @@ class StoreData {
 
   Future<File> writeData(var localFile, Map data) async {
     final file = await localFile;
+    print(data);
     var jsonText = jsonEncode(data);
     return file.writeAsString(jsonText);
   }
@@ -82,4 +83,20 @@ class StoreData {
       return {"status": "ERROR"};
     }
   }
+
+  Future<int> deleteFiles() async {
+    try {
+      final file1 = await _localFileActiveLanguages;
+      final file2 = await _localFileSettings;
+      final file3 = await _localFileAvailableLanguages;
+
+      await file1.delete();
+      await file2.delete();
+      await file3.delete();
+      return 1;
+    } catch (e) {
+      return 0;
+    }
+  }
+
 }

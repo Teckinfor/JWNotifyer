@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_background_service/flutter_background_service.dart';
+import 'store_data.dart';
+import 'package:restart_app/restart_app.dart';
 import 'copyright_informations.dart';
+import 'dart:io';
 
 class Settings extends StatefulWidget {
   final String intervalUsed;
@@ -99,6 +103,68 @@ class _SettingsState extends State<Settings> {
                         })
                   ],
                 ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Container(
+                      margin: const EdgeInsets.only(left: 0, bottom: 50),
+                      child: FloatingActionButton.extended(
+                        heroTag: "delete",
+                        onPressed: () {
+                          // Confirmation
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return StatefulBuilder(
+                                    builder: (context, setState) {
+                                  return AlertDialog(
+                                      title: const Text("WAIT !"),
+                                      content: SingleChildScrollView(
+                                          child: Column(
+                                              mainAxisSize: MainAxisSize.min,
+                                              children: [
+                                            Container(
+                                              margin:
+                                                  EdgeInsets.only(bottom: 30),
+                                              child: const Text(
+                                                  "Are you sure you want to delete all the settings files?"),
+                                            ),
+                                            Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceAround,
+                                                children: [
+                                                  FloatingActionButton.extended(
+                                                    heroTag: "Cancel",
+                                                    onPressed: (() {
+                                                      Navigator.of(context,
+                                                              rootNavigator:
+                                                                  true)
+                                                          .pop('dialog');
+                                                    }),
+                                                    label: const Text("Cancel"),
+                                                  ),
+                                                  FloatingActionButton.extended(
+                                                    onPressed: (() {
+                                                      deleteAllContent();
+                                                    }),
+                                                    heroTag: "Confirm",
+                                                    label:
+                                                        const Text("Confirm"),
+                                                    backgroundColor: Colors.red,
+                                                  )
+                                                ])
+                                          ])));
+                                });
+                              });
+                        },
+                        backgroundColor: Colors.red,
+                        icon: const Icon(Icons.delete),
+                        label: const Text("DELETE ALL SETTINGS"),
+                      ),
+                    ),
+                  ],
+                )
               ]),
             ),
             Align(
@@ -120,5 +186,10 @@ class _SettingsState extends State<Settings> {
       ),
       bottomSheet: const CopyrightInformations(),
     );
+  }
+
+  void deleteAllContent() async {
+    StoreData().deleteFiles();
+    Restart.restartApp();
   }
 }

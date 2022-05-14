@@ -3,9 +3,8 @@
 import 'dart:async';
 import 'dart:collection';
 import 'package:jwnotifyer/check_content.dart';
-import 'settings.dart';
 import 'package:flutter/material.dart';
-import 'check_content.dart';
+import 'settings.dart';
 import 'store_data.dart';
 
 class HomePage extends StatefulWidget {
@@ -87,11 +86,6 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
-    // Auto check (must be modified)
-    timer = Timer.periodic(Duration(seconds: interval), (Timer t) {
-      checkContentEachLanguage(languageFields: languageFields);
-    });
   }
 
   @override
@@ -104,33 +98,15 @@ class _HomePageState extends State<HomePage> {
   ////// FUNCTIONS //////
   ///////////////////////
 
-  // Fetching informations on JW.ORG
-  void checkContentEachLanguage({required Map languageFields}) async {
-    for (String language in languageFields.keys) {
-      if (language == "status") {
-        continue;
-      }
-      if (languageFields[language]["isEnabled"]) {
-        print("CURRENTLY CHECKING FOR $language with $intervalValue interval");
-
-        Fetcher fetchLanguage = Fetcher(language: language);
-        if (await fetchLanguage.main() ?? false) {
-          setState(() {
-            languageFields[language]["lastNotif"] = DateTime.now();
-          });
-        }
-      }
-    }
-  }
-
   // Display the time since the last received notification
   Container lastNotificationInformation(
       {required String language, required Map languageFields}) {
     String text = "";
     if (languageFields[language]["lastNotif"] != null) {
+      DateTime realDateTime =
+          DateTime.parse(languageFields[language]["lastNotif"]);
       num second = ((DateTime.now().millisecondsSinceEpoch / 1000).round() -
-          (languageFields[language]["lastNotif"].millisecondsSinceEpoch / 1000)
-              .round()) as int;
+          (realDateTime.millisecondsSinceEpoch / 1000).round()) as int;
       if (second > 31536000) {
         int years = (second / 31536000).round();
         text = (years == 1) ? "$years year ago" : "$years years ago";
@@ -359,7 +335,7 @@ class _HomePageState extends State<HomePage> {
                 }
               case "Debug":
                 {
-                  interval = 30; // 30 secondes
+                  interval = 10; // 10 secondes
                   break;
                 }
               default:
