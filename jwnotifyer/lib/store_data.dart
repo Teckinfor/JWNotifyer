@@ -44,6 +44,7 @@ class StoreData {
 
   Future<Map> get getAvailableLanguages async {
     return await readData(await _localFileAvailableLanguages);
+
   }
 
   Future<String> get _localPath async {
@@ -97,4 +98,5 @@ class StoreData {
       return 0;
     }
   }
+
 }
