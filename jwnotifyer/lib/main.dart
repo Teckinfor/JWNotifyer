@@ -9,6 +9,9 @@ import 'dart:async';
 import 'package:path_provider_android/path_provider_android.dart';
 import 'package:path_provider_ios/path_provider_ios.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'dart:convert';
+import 'dart:math';
 
 void main() async {
   // Wait the service
@@ -80,6 +83,8 @@ void onStart(ServiceInstance service) async {
   service.on('stopService').listen((event) {
     service.stopSelf();
   });
+
+  //NotificationService2().init();
 
   if (Platform.isIOS) PathProviderIOS.registerWith();
   if (Platform.isAndroid) PathProviderAndroid.registerWith();
@@ -224,4 +229,65 @@ void periodicTask(service, languageFields, supportedLanguages, intervalValue,
           interval, savedInterval);
     }
   });
+}
+
+class NotificationService2 {
+  static final NotificationService2 _notificationService =
+      NotificationService2._internal();
+
+  factory NotificationService2() {
+    return _notificationService;
+  }
+
+  NotificationService2._internal();
+  final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  Future<void> init() async {
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    // final IOSInitializationSettings initializationSettingsIOS =
+    //     IOSInitializationSettings(
+    //   requestSoundPermission: false,
+    //   requestBadgePermission: false,
+    //   requestAlertPermission: false,
+    //   onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+    // );
+
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+            android: initializationSettingsAndroid,
+            //iOS: initializationSettingsIOS,
+            macOS: null);
+
+    AndroidNotificationDetails androidPlatformChannelSpecifics =
+        const AndroidNotificationDetails(
+      'Notification by language', 'Notification by language',
+      channelDescription: "Notification from JWNotifyer",
+      importance: Importance.high,
+      priority: Priority.high,
+      //largeIcon: FilePathAndroidBitmap(article["img"])
+    );
+
+    const IOSNotificationDetails iOSPlatformChannelSpecifics =
+        IOSNotificationDetails(
+      presentAlert: false,
+      presentBadge: false,
+      presentSound: false,
+    );
+
+    NotificationDetails platformChannelSpecifics = NotificationDetails(
+        android: androidPlatformChannelSpecifics,
+        iOS: iOSPlatformChannelSpecifics);
+
+    await flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onSelectNotification: selectNotification);
+
+    await flutterLocalNotificationsPlugin.show(Random().nextInt(110000),
+        "Service is running", "", platformChannelSpecifics,
+        payload: (""));
+  }
+
+  void selectNotification(String? payload) async {}
 }
